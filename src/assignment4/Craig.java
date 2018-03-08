@@ -2,7 +2,7 @@ package assignment4;
 
 
 /*
- * Example critter
+ * Example critter. 
  * Do not change or submit this file.
  */
 public class Craig extends Critter {
