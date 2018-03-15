@@ -153,11 +153,25 @@ public abstract class Critter {
 	 * @return List of Critters.
 	 * @throws InvalidCritterException
 	 */
-	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
-		List<Critter> result = new java.util.ArrayList<Critter>();
+	 public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
+ 		List<Critter> result = new java.util.ArrayList<Critter>();
+ 		try{
+             Class class = Class.forName(critter_class_name);
+             for (Critter c: population) {
+                 if (c.getClass() == class){
+ 					Critter newCritter = new Critter();
+ 					newCritter = c;
+                     result.add(newCritter);
+                 }
+             }
+         }
+         catch (Exception exception) {
+             InvalidCritterException e = new InvalidCritterException(critter_class_name);
+             throw e;
+         }
 
-		return result;
-	}
+ 		return result;
+ 	}
 
 	/**
 	 * Prints out how many Critters of each type there are on the board.
@@ -238,9 +252,14 @@ public abstract class Critter {
 	/**
 	 * Clear the world of all critters, dead and alive
 	 */
-	public static void clearWorld() {
-		// Complete this method.
-	}
+	 public static void clearWorld() {
+ 		for(Critter c: population){
+ 			population.remove(c);
+ 		}
+ 		for(Critter c: babies){
+ 			babies.remove(c);
+ 		}
+ 	}
 
 	public static void worldTimeStep() {
 		// Complete this method.
