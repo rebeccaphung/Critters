@@ -67,7 +67,51 @@ public class Main {
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
 
-        // System.out.println("GLHF");
+        System.out.print("critters>");
+        String line = kb.nextLine();
+        String[] input = line.split("\\s+");
+        System.out.println();
+
+        while(input[0] != "quit"){
+            switch(input[0]){
+                case "show":
+                    Critter.displayWorld();
+                    break;
+                case "step":
+                    if(input.size == 1){
+                        Critter.worldTimeStep();
+                    }
+                    else{
+                        for(int i = 0; i < input[1]; i++){
+                            Critter.worldTimeStep();
+                        }
+                    }
+                    break;
+                case "seed":
+                    Critter.setSeed(input[1]);
+                    break;
+                case "make":
+                    if(input.size == 2){
+                        Critter.makeCritter(myPackage + "." + input[1]);
+                    }
+                    else{
+                        for(int i = 0; i < input[2]; i++){
+                            Critter.makeCritter(myPackage + "." + input[1]);
+                        }
+                    }
+                    break;
+                case "stats":
+                    List<Critter> critters = new List<Critter>();
+                    critters = getInstances(myPackage + "." + input[1]);
+                    Critter.runStats(critters);
+                    break;
+            }
+
+            System.out.print("critters>");
+            line = kb.nextLine();
+            input = line.split("\\s+");
+            System.out.println();
+        }
 
         /* Write your code above */
         System.out.flush();
