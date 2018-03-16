@@ -50,22 +50,47 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 
+	private static List<Integer> getLocation(){
+		List<Integer> coords = new List<Integer>();
+		coord.add(0, x_coord);
+		coord.add(1, y_coord);
+
+		return coords;
+	}
+
+	private boolean movedFlag;
+
 	private final void changeLocation(int xChange, yChange){
-		x_coord += xChange;
-		if(x_coord > Params.world_width - 1){
-			x_coord = x_coord % Params.world_width;
+		newX = x_coord + xChange;
+		if(newX > Params.world_width - 1){ //check if Critter moved off the sides of the world
+			newX = newX % Params.world_width;
 		}
-		else if(x_coord < 0){
-			x_coord += Params.world_width;
+		else if(newX < 0){
+			newX += Params.world_width;
 		}
 
-		y_coord += yChange;
-		if(y_coord > Params.world_height - 1){
-			y_coord = y_coord % Params.world_height;
+		newY = y_coord + yChange;
+		if(newY > Params.world_height - 1){ //check if Critter moved off the top/bottom of the world
+			newY = newY % Params.world_height;
 		}
-		else if(y_coord < 0){
-			y_coord += Params.world_height;
+		else if(newY < 0){
+			newY += Params.world_height;
 		}
+
+		if(encounteredFlag){ //if Critter tries to move during encounters, check if they already moved or if location is already occupied. If it is, don't move
+			if(movedFlag){
+				return;
+			}
+			for(Critter c : population){
+				if((c.getLocation().get(0) == newX) && (c.getLocation().get(1) == newY)){
+					return;
+				}
+			}
+		}
+
+		x_coord = newX;
+		y_coord = newY;
+		movedFlag = true;
 	}
 
 	protected final void walk(int direction) {
@@ -253,16 +278,77 @@ public abstract class Critter {
 	 * Clear the world of all critters, dead and alive
 	 */
 	 public static void clearWorld() {
- 		for(Critter c: population){
- 			population.remove(c);
- 		}
- 		for(Critter c: babies){
- 			babies.remove(c);
- 		}
+ 		population.clear();
+		babies.clear();
  	}
 
+
+	private int timestep; //number of TimeSteps
 	public static void worldTimeStep() {
-		// Complete this method.
+		timestep++;
+		doTimeSteps();
+		doEncounters();
+	}
+
+
+	private static void doTimeSteps(){
+		for(Critter c: population){
+			c.doTimeStep();
+		}
+	}
+
+	private boolean encounteredFlag;
+
+	private static void doEncounters(){
+		encounteredFlag = true;
+		for(int i = 0; i < population.size(); i++){
+			for(int j = i + 1; j < population.size(); j++){
+				Critter a = population.get(i);
+				Critter b = population.get(j);
+				if(a.getLocation() == b.getLocation()){ //if 2 Critters in same location, fight
+					int aFightPower, bFightPower;
+
+					if(a.fight(b.toString())){ //if a decides to fight, set aFightPower
+						aFightPower = getRandomInt(a.getEnergy());
+					}
+					else{
+						aFightPower = 0;
+					}
+
+					if(b.fight(a.toString())){ //if b decides to fight, set bFightPower
+						bFightPower = getRandomInt(b.getEnergy());
+					}
+					else{
+						bFightPower = 0;
+					}
+
+					if(a.getLocation() == b.getLocation()){ //if 2 Critters are still in same location, see which Critter wins
+						if(aFightPower >= bFightPower){ //if a wins (or there's a tie)
+							a.energy += b.getEnergy() / 2;
+							population.remove(b);
+						}
+						else{ // if b wins
+							b.energy += a.getEnergy() / 2;
+							population.remove(a);	
+						}
+
+				}
+			}
+		}
+		encounteredFlag = false;
+		movedFlag = false;
+	}
+
+	private static void updateRestEnergy(){
+
+	}
+
+	private static void generateAlgae(){
+
+	}
+
+	private static void generateBabies(){
+
 	}
 
 	public static void displayWorld() {
