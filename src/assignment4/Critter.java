@@ -11,8 +11,8 @@ package assignment4;
  * Spring 2018
  */
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 /* see the PDF for descriptions of the methods and fields in this class
  * you may add fields, methods or inner classes to Critter ONLY if you make your additions private
@@ -174,7 +174,15 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
-		
+		try {
+			Class c = Class.forName(critter_class_name);
+			Critter newCritter = (Critter)c.newInstance();
+			population.add(newCritter);
+		}
+		catch(Exception exception) {
+			InvalidCritterException e  = new InvalidCritterException(critter_class_name);
+			throw e;
+		}
 	}
 
 	/**
