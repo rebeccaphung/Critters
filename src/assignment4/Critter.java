@@ -49,17 +49,20 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 
+	
 	private static List<Integer> getLocation(){
-		ArrayList<Integer> coords = new ArrayList<Integer>();
+		/*ArrayList<Integer> coords = new ArrayList<Integer>();
 		coords.add(0, x_coord);
 		coords.add(1, y_coord);
-		return coords;
+		return coords;*/
+		return null;
 	}
 
 	private static boolean movedFlag;
 
+	
 	private final void changeLocation(int xChange, int yChange){
-		int newX = x_coord + xChange;
+		/*int newX = x_coord + xChange;
 		if(newX > Params.world_width - 1){ //check if Critter moved off the sides of the world
 			newX = newX % Params.world_width;
 		}
@@ -88,13 +91,14 @@ public abstract class Critter {
 
 		x_coord = newX;
 		y_coord = newY;
-		movedFlag = true;
+		movedFlag = true;*/
 	}
 
 	protected final void walk(int direction) {
 		energy -= Params.walk_energy_cost;
 		switch (direction){
 			case 0:
+				this.x_coord = 0;
 				changeLocation(1, 0);
 				break;
 			case 1:
@@ -151,6 +155,8 @@ public abstract class Critter {
 		}
 	}
 
+	
+	
 	protected final void reproduce(Critter offspring, int direction) {
 	}
 
@@ -182,11 +188,11 @@ public abstract class Critter {
  		try{
              Class class1 = Class.forName(critter_class_name);
              for (Critter c: population) {
-                 if (c.getClass() == class1){
- 					Critter newCritter = new Critter();	//need to change to make critter
- 					newCritter = c;
-                     result.add(newCritter);
-                 }
+//                 if (c.getClass() == class1){
+// 					Critter newCritter = new Critter();	//need to change to make critter
+// 					newCritter = c;
+//                     result.add(newCritter);
+//                 }
              }
          }
          catch (Exception exception) {
@@ -288,7 +294,7 @@ public abstract class Critter {
 	public static void worldTimeStep() {
 		timestep++;
 		doTimeSteps();
-		doEncounters();
+		//doEncounters();
 	}
 
 
@@ -301,7 +307,7 @@ public abstract class Critter {
 	private static boolean encounteredFlag;
 
 	private static void doEncounters(){
-		encounteredFlag = true;
+		/*encounteredFlag = true;
 		for(int i = 0; i < population.size(); i++){
 			for(int j = i + 1; j < population.size(); j++){
 				Critter a = population.get(i);
@@ -338,7 +344,7 @@ public abstract class Critter {
 		}
 		}
 		encounteredFlag = false;
-		movedFlag = false;
+		movedFlag = false;*/
 	}
 
 	private static void updateRestEnergy(){
