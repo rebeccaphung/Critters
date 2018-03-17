@@ -48,11 +48,114 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 
+<<<<<<< HEAD
+=======
+	private static List<Integer> getLocation(){
+		List<Integer> coords = new List<Integer>();
+		coord.add(0, x_coord);
+		coord.add(1, y_coord);
+
+		return coords;
+	}
+
+	private boolean movedFlag;
+
+	private final void changeLocation(int xChange, yChange){
+		newX = x_coord + xChange;
+		if(newX > Params.world_width - 1){ //check if Critter moved off the sides of the world
+			newX = newX % Params.world_width;
+		}
+		else if(newX < 0){
+			newX += Params.world_width;
+		}
+
+		newY = y_coord + yChange;
+		if(newY > Params.world_height - 1){ //check if Critter moved off the top/bottom of the world
+			newY = newY % Params.world_height;
+		}
+		else if(newY < 0){
+			newY += Params.world_height;
+		}
+
+		if(encounteredFlag){ //if Critter tries to move during encounters, check if they already moved or if location is already occupied. If it is, don't move
+			if(movedFlag){
+				return;
+			}
+			for(Critter c : population){
+				if((c.getLocation().get(0) == newX) && (c.getLocation().get(1) == newY)){
+					return;
+				}
+			}
+		}
+
+		x_coord = newX;
+		y_coord = newY;
+		movedFlag = true;
+	}
+
+>>>>>>> origin/master
 	protected final void walk(int direction) {
+		energy -= Param.walk_energy_cost;
+		switch (direction){
+			case 0:
+				changeLocation(1, 0);
+				break;
+			case 1:
+				changeLocation(1, 1);
+				break;
+			case 2:
+				changeLocation(0, 1);
+				break;
+			case 3:
+				changeLocation(-1, 1);
+				break;
+			case 4:
+				changeLocation(-1, 0);
+				break;
+			case 5:
+				changeLocation(-1, -1);
+				break;
+			case 6:
+				changeLocation(0, -1);
+				break;
+			case 7:
+				changeLocation(1, -1);
+				break;
+		}
 	}
 
 	protected final void run(int direction) {
+<<<<<<< HEAD
 
+=======
+		energy -= Param.run_energy_cost;
+		switch (direction){
+			case 0:
+				changeLocation(2, 0);
+				break;
+			case 1:
+				changeLocation(2, 2);
+				break;
+			case 2:
+				changeLocation(0, 2);
+				break;
+			case 3:
+				changeLocation(-2, 2);
+				break;
+			case 4:
+				changeLocation(-2, 0);
+				break;
+			case 5:
+				changeLocation(-2, -2);
+				break;
+			case 6:
+				changeLocation(0, -2);
+				break;
+			case 7:
+				changeLocation(2, -2);
+				break;
+		}
+>>>>>>> origin/master
 	}
 
 	protected final void reproduce(Critter offspring, int direction) {
@@ -81,11 +184,33 @@ public abstract class Critter {
 	 * @return List of Critters.
 	 * @throws InvalidCritterException
 	 */
+<<<<<<< HEAD
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		List<Critter> result = new java.util.ArrayList<Critter>();
 
 		return result;
 	}
+=======
+	 public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
+ 		List<Critter> result = new java.util.ArrayList<Critter>();
+ 		try{
+             Class class = Class.forName(critter_class_name);
+             for (Critter c: population) {
+                 if (c.getClass() == class){
+ 					Critter newCritter = new Critter();
+ 					newCritter = c;
+                     result.add(newCritter);
+                 }
+             }
+         }
+         catch (Exception exception) {
+             InvalidCritterException e = new InvalidCritterException(critter_class_name);
+             throw e;
+         }
+
+ 		return result;
+ 	}
+>>>>>>> origin/master
 
 	/**
 	 * Prints out how many Critters of each type there are on the board.
@@ -108,7 +233,11 @@ public abstract class Critter {
 			System.out.print(prefix + s + ":" + critter_count.get(s));
 			prefix = ", ";
 		}
+<<<<<<< HEAD
 		System.out.println(); // test
+=======
+		System.out.println();
+>>>>>>> origin/master
 	}
 
 	/* the TestCritter class allows some critters to "cheat". If you want to
@@ -166,14 +295,90 @@ public abstract class Critter {
 	/**
 	 * Clear the world of all critters, dead and alive
 	 */
+<<<<<<< HEAD
 	public static void clearWorld() {
 		// Complete this method.
 	}
 
+=======
+	 public static void clearWorld() {
+ 		population.clear();
+		babies.clear();
+ 	}
+
+
+	private int timestep; //number of TimeSteps
+>>>>>>> origin/master
 	public static void worldTimeStep() {
-		// Complete this method.
+		timestep++;
+		doTimeSteps();
+		doEncounters();
 	}
 
+
+	private static void doTimeSteps(){
+		for(Critter c: population){
+			c.doTimeStep();
+		}
+	}
+
+<<<<<<< HEAD
+=======
+	private boolean encounteredFlag;
+
+	private static void doEncounters(){
+		encounteredFlag = true;
+		for(int i = 0; i < population.size(); i++){
+			for(int j = i + 1; j < population.size(); j++){
+				Critter a = population.get(i);
+				Critter b = population.get(j);
+				if(a.getLocation() == b.getLocation()){ //if 2 Critters in same location, fight
+					int aFightPower, bFightPower;
+
+					if(a.fight(b.toString())){ //if a decides to fight, set aFightPower
+						aFightPower = getRandomInt(a.getEnergy());
+					}
+					else{
+						aFightPower = 0;
+					}
+
+					if(b.fight(a.toString())){ //if b decides to fight, set bFightPower
+						bFightPower = getRandomInt(b.getEnergy());
+					}
+					else{
+						bFightPower = 0;
+					}
+
+					if(a.getLocation() == b.getLocation()){ //if 2 Critters are still in same location, see which Critter wins
+						if(aFightPower >= bFightPower){ //if a wins (or there's a tie)
+							a.energy += b.getEnergy() / 2;
+							population.remove(b);
+						}
+						else{ // if b wins
+							b.energy += a.getEnergy() / 2;
+							population.remove(a);	
+						}
+
+				}
+			}
+		}
+		encounteredFlag = false;
+		movedFlag = false;
+	}
+
+	private static void updateRestEnergy(){
+
+	}
+
+	private static void generateAlgae(){
+
+	}
+
+	private static void generateBabies(){
+
+	}
+
+>>>>>>> origin/master
 	public static void displayWorld() {
 		// Complete this method.
 	}
