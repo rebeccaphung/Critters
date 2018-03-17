@@ -11,6 +11,7 @@ package assignment4;
  * Spring 2018
  */
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
 
@@ -71,7 +72,7 @@ public class Main {
 
         System.out.print("critters>");
         String line = kb.nextLine();
-        String[] input = line.split("\\s+");
+        String[] input = line.split("\\s+");	//groups all white space as delimiters
         System.out.println();
 
         while(input[0] != "quit"){
@@ -80,31 +81,31 @@ public class Main {
                     Critter.displayWorld();
                     break;
                 case "step":
-                    if(input.size == 1){
+                    if(input.length == 1){
                         Critter.worldTimeStep();
                     }
                     else{
-                        for(int i = 0; i < input[1]; i++){
+                        for(int i = 0; i < Integer.parseInt(input[1]); i++){
                             Critter.worldTimeStep();
                         }
                     }
                     break;
                 case "seed":
-                    Critter.setSeed(input[1]);
+                    Critter.setSeed(Integer.parseInt(input[1]));
                     break;
                 case "make":
-                    if(input.size == 2){
+                    if(input.length == 2){
                         Critter.makeCritter(myPackage + "." + input[1]);
                     }
                     else{
-                        for(int i = 0; i < input[2]; i++){
+                        for(int i = 0; i < Integer.parseInt(input[2]); i++){
                             Critter.makeCritter(myPackage + "." + input[1]);
                         }
                     }
                     break;
                 case "stats":
-                    List<Critter> critters = new List<Critter>();
-                    critters = getInstances(myPackage + "." + input[1]);
+                    ArrayList<Critter> critters = new ArrayList<Critter>();
+                    //critters = getInstances(myPackage + "." + input[1]);
                     Critter.runStats(critters);
                     break;
             }

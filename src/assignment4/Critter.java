@@ -11,6 +11,7 @@ package assignment4;
  * Spring 2018
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
 /* see the PDF for descriptions of the methods and fields in this class
@@ -48,20 +49,17 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 
-<<<<<<< HEAD
-=======
 	private static List<Integer> getLocation(){
-		List<Integer> coords = new List<Integer>();
-		coord.add(0, x_coord);
-		coord.add(1, y_coord);
-
+		ArrayList<Integer> coords = new ArrayList<Integer>();
+		coords.add(0, x_coord);
+		coords.add(1, y_coord);
 		return coords;
 	}
 
-	private boolean movedFlag;
+	private static boolean movedFlag;
 
-	private final void changeLocation(int xChange, yChange){
-		newX = x_coord + xChange;
+	private final void changeLocation(int xChange, int yChange){
+		int newX = x_coord + xChange;
 		if(newX > Params.world_width - 1){ //check if Critter moved off the sides of the world
 			newX = newX % Params.world_width;
 		}
@@ -69,7 +67,7 @@ public abstract class Critter {
 			newX += Params.world_width;
 		}
 
-		newY = y_coord + yChange;
+		int newY = y_coord + yChange;
 		if(newY > Params.world_height - 1){ //check if Critter moved off the top/bottom of the world
 			newY = newY % Params.world_height;
 		}
@@ -93,9 +91,8 @@ public abstract class Critter {
 		movedFlag = true;
 	}
 
->>>>>>> origin/master
 	protected final void walk(int direction) {
-		energy -= Param.walk_energy_cost;
+		energy -= Params.walk_energy_cost;
 		switch (direction){
 			case 0:
 				changeLocation(1, 0);
@@ -125,10 +122,7 @@ public abstract class Critter {
 	}
 
 	protected final void run(int direction) {
-<<<<<<< HEAD
-
-=======
-		energy -= Param.run_energy_cost;
+		energy -= Params.run_energy_cost;
 		switch (direction){
 			case 0:
 				changeLocation(2, 0);
@@ -155,7 +149,6 @@ public abstract class Critter {
 				changeLocation(2, -2);
 				break;
 		}
->>>>>>> origin/master
 	}
 
 	protected final void reproduce(Critter offspring, int direction) {
@@ -184,20 +177,13 @@ public abstract class Critter {
 	 * @return List of Critters.
 	 * @throws InvalidCritterException
 	 */
-<<<<<<< HEAD
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
-		List<Critter> result = new java.util.ArrayList<Critter>();
-
-		return result;
-	}
-=======
-	 public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
  		List<Critter> result = new java.util.ArrayList<Critter>();
  		try{
-             Class class = Class.forName(critter_class_name);
+             Class class1 = Class.forName(critter_class_name);
              for (Critter c: population) {
-                 if (c.getClass() == class){
- 					Critter newCritter = new Critter();
+                 if (c.getClass() == class1){
+ 					Critter newCritter = new Critter();	//need to change to make critter
  					newCritter = c;
                      result.add(newCritter);
                  }
@@ -210,7 +196,6 @@ public abstract class Critter {
 
  		return result;
  	}
->>>>>>> origin/master
 
 	/**
 	 * Prints out how many Critters of each type there are on the board.
@@ -233,11 +218,8 @@ public abstract class Critter {
 			System.out.print(prefix + s + ":" + critter_count.get(s));
 			prefix = ", ";
 		}
-<<<<<<< HEAD
 		System.out.println(); // test
-=======
 		System.out.println();
->>>>>>> origin/master
 	}
 
 	/* the TestCritter class allows some critters to "cheat". If you want to
@@ -295,20 +277,14 @@ public abstract class Critter {
 	/**
 	 * Clear the world of all critters, dead and alive
 	 */
-<<<<<<< HEAD
-	public static void clearWorld() {
-		// Complete this method.
-	}
-
-=======
 	 public static void clearWorld() {
  		population.clear();
 		babies.clear();
  	}
 
 
-	private int timestep; //number of TimeSteps
->>>>>>> origin/master
+	private static int timestep; //number of TimeSteps
+	
 	public static void worldTimeStep() {
 		timestep++;
 		doTimeSteps();
@@ -322,9 +298,7 @@ public abstract class Critter {
 		}
 	}
 
-<<<<<<< HEAD
-=======
-	private boolean encounteredFlag;
+	private static boolean encounteredFlag;
 
 	private static void doEncounters(){
 		encounteredFlag = true;
@@ -362,23 +336,20 @@ public abstract class Critter {
 				}
 			}
 		}
+		}
 		encounteredFlag = false;
 		movedFlag = false;
 	}
 
 	private static void updateRestEnergy(){
-
 	}
 
 	private static void generateAlgae(){
-
 	}
 
 	private static void generateBabies(){
-
 	}
 
->>>>>>> origin/master
 	public static void displayWorld() {
 		// Complete this method.
 	}
