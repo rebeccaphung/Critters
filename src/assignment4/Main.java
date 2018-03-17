@@ -5,7 +5,9 @@ package assignment4;
  * Rebecca Phung
  * rp32526
  * 15455
- * Slip days used: <0>
+ * Richard Li
+ * rgl568
+ * 15460
  * Spring 2018
  */
 

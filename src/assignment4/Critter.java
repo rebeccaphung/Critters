@@ -2,16 +2,14 @@ package assignment4;
 /* CRITTERS Critter.java
  * EE422C Project 4 submission by
  * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
- * <Student1 5-digit Unique No.>
- * <Student2 Name>
- * <Student2 EID>
- * <Student2 5-digit Unique No.>
- * Slip days used: <0>
- * Fall 2016
+ * Rebecca Phung
+ * rp32526
+ * 15455
+ * Richard Li
+ * rgl568
+ * 15460
+ * Spring 2018
  */
-
 
 import java.util.List;
 
@@ -30,39 +28,39 @@ public abstract class Critter {
 	static {
 		myPackage = Critter.class.getPackage().toString().split(" ")[1];
 	}
-	
+
 	private static java.util.Random rand = new java.util.Random();
 	public static int getRandomInt(int max) {
 		return rand.nextInt(max);
 	}
-	
+
 	public static void setSeed(long new_seed) {
 		rand = new java.util.Random(new_seed);
 	}
-	
-	
+
+
 	/* a one-character long string that visually depicts your critter in the ASCII interface */
 	public String toString() { return ""; }
-	
+
 	private int energy = 0;
 	protected int getEnergy() { return energy; }
-	
+
 	private int x_coord;
 	private int y_coord;
-	
+
 	protected final void walk(int direction) {
 	}
-	
+
 	protected final void run(int direction) {
-		
+
 	}
-	
+
 	protected final void reproduce(Critter offspring, int direction) {
 	}
 
 	public abstract void doTimeStep();
 	public abstract boolean fight(String oponent);
-	
+
 	/**
 	 * create and initialize a Critter subclass.
 	 * critter_class_name must be the unqualified name of a concrete subclass of Critter, if not,
@@ -74,8 +72,9 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
+		
 	}
-	
+
 	/**
 	 * Gets a list of critters of a specific type.
 	 * @param critter_class_name What kind of Critter is to be listed.  Unqualified class name.
@@ -84,10 +83,10 @@ public abstract class Critter {
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		List<Critter> result = new java.util.ArrayList<Critter>();
-	
+
 		return result;
 	}
-	
+
 	/**
 	 * Prints out how many Critters of each type there are on the board.
 	 * @param critters List of Critters.
@@ -109,13 +108,13 @@ public abstract class Critter {
 			System.out.print(prefix + s + ":" + critter_count.get(s));
 			prefix = ", ";
 		}
-		System.out.println();		
+		System.out.println(); // test
 	}
-	
-	/* the TestCritter class allows some critters to "cheat". If you want to 
+
+	/* the TestCritter class allows some critters to "cheat". If you want to
 	 * create tests of your Critter model, you can create subclasses of this class
-	 * and then use the setter functions contained here. 
-	 * 
+	 * and then use the setter functions contained here.
+	 *
 	 * NOTE: you must make sure that the setter functions work with your implementation
 	 * of Critter. That means, if you're recording the positions of your critters
 	 * using some sort of external grid or some other data structure in addition
@@ -126,23 +125,23 @@ public abstract class Critter {
 		protected void setEnergy(int new_energy_value) {
 			super.energy = new_energy_value;
 		}
-		
+
 		protected void setX_coord(int new_x_coord) {
 			super.x_coord = new_x_coord;
 		}
-		
+
 		protected void setY_coord(int new_y_coord) {
 			super.y_coord = new_y_coord;
 		}
-		
+
 		protected int getX_coord() {
 			return super.x_coord;
 		}
-		
+
 		protected int getY_coord() {
 			return super.y_coord;
 		}
-		
+
 
 		/*
 		 * This method getPopulation has to be modified by you if you are not using the population
@@ -152,11 +151,11 @@ public abstract class Critter {
 		protected static List<Critter> getPopulation() {
 			return population;
 		}
-		
+
 		/*
 		 * This method getBabies has to be modified by you if you are not using the babies
 		 * ArrayList that has been provided in the starter code.  In any case, it has to be
-		 * implemented for grading tests to work.  Babies should be added to the general population 
+		 * implemented for grading tests to work.  Babies should be added to the general population
 		 * at either the beginning OR the end of every timestep.
 		 */
 		protected static List<Critter> getBabies() {
@@ -170,11 +169,11 @@ public abstract class Critter {
 	public static void clearWorld() {
 		// Complete this method.
 	}
-	
+
 	public static void worldTimeStep() {
 		// Complete this method.
 	}
-	
+
 	public static void displayWorld() {
 		// Complete this method.
 	}
