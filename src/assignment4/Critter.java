@@ -11,6 +11,7 @@ package assignment4;
  * Spring 2018
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -50,19 +51,18 @@ public abstract class Critter {
 	private int y_coord;
 
 	
-	private static List<Integer> getLocation(){
-		/*ArrayList<Integer> coords = new ArrayList<Integer>();
+	private List<Integer> getLocation(){
+		List<Integer> coords = new ArrayList<Integer>();
 		coords.add(0, x_coord);
 		coords.add(1, y_coord);
-		return coords;*/
-		return null;
+		return coords;
 	}
 
 	private static boolean movedFlag;
 
 	
-	private final void changeLocation(int xChange, int yChange){
-		/*int newX = x_coord + xChange;
+	private void changeLocation(int xChange, int yChange){
+		int newX = x_coord + xChange;
 		if(newX > Params.world_width - 1){ //check if Critter moved off the sides of the world
 			newX = newX % Params.world_width;
 		}
@@ -91,7 +91,7 @@ public abstract class Critter {
 
 		x_coord = newX;
 		y_coord = newY;
-		movedFlag = true;*/
+		movedFlag = true;
 	}
 
 	protected final void walk(int direction) {
@@ -177,6 +177,8 @@ public abstract class Critter {
 		try {
 			Class c = Class.forName(critter_class_name);
 			Critter newCritter = (Critter)c.newInstance();
+			newCritter.x_coord = rand.nextInt(Params.world_width);
+			newCritter.y_coord = rand.nextInt(Params.world_height);
 			population.add(newCritter);
 		}
 		catch(Exception exception) {
@@ -196,11 +198,11 @@ public abstract class Critter {
  		try{
              Class class1 = Class.forName(critter_class_name);
              for (Critter c: population) {
-//                 if (c.getClass() == class1){
-// 					Critter newCritter = new Critter();	//need to change to make critter
-// 					newCritter = c;
-//                     result.add(newCritter);
-//                 }
+                 if (c.getClass() == class1){
+ 					//Critter newCritter = new Critter();
+ 					//newCritter = c;
+                    result.add(c);
+                 }
              }
          }
          catch (Exception exception) {
@@ -232,7 +234,6 @@ public abstract class Critter {
 			System.out.print(prefix + s + ":" + critter_count.get(s));
 			prefix = ", ";
 		}
-		System.out.println(); // test
 		System.out.println();
 	}
 
@@ -365,6 +366,38 @@ public abstract class Critter {
 	}
 
 	public static void displayWorld() {
-		// Complete this method.
+		final int displayWidth = Params.world_width + 2;
+		final int displayHeight = Params.world_height + 2;
+		String[][] world = new String[displayHeight][displayWidth];
+		int x, y;
+		
+		for(y = 0; y < world.length; y++) {
+			for(x = 0; x < world[y].length; x++) {
+				world[y][x] = " ";
+				if((x == 0) || (x == displayWidth - 1)) {
+					world[y][x] = "|";
+				}
+				if((y == 0) || (y == displayHeight - 1)) {
+					if(world[y][x] == "|") {
+						world[y][x] = "+";
+					}else {
+						world[y][x] = "-";
+					}
+				}
+			}
+		}
+		
+		for(int i = 0; i < population.size(); i++) {
+			x = population.get(i).x_coord + 1;
+			y = population.get(i).y_coord + 1;
+			world[y][x] = population.get(i).toString();
+		}
+		
+		for(y = 0; y < world.length; y++) {
+			for(x = 0; x < world[y].length; x++) {
+				System.out.print(world[y][x]);
+			}
+			System.out.println();
+		}
 	}
 }
