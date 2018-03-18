@@ -50,9 +50,14 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 
+<<<<<<< HEAD
 	
 	private List<Integer> getLocation(){
 		List<Integer> coords = new ArrayList<Integer>();
+=======
+	private List<Integer> getLocation(){
+		List<Integer> coords = new java.util.ArrayList<Integer>();
+>>>>>>> 57c2aa9e97dfca9f589c69e75fa41df7b370cd31
 		coords.add(0, x_coord);
 		coords.add(1, y_coord);
 		return coords;
@@ -60,8 +65,13 @@ public abstract class Critter {
 
 	private static boolean movedFlag;
 
+<<<<<<< HEAD
 	
 	private void changeLocation(int xChange, int yChange){
+=======
+
+	private final void changeLocation(int xChange, int yChange){
+>>>>>>> 57c2aa9e97dfca9f589c69e75fa41df7b370cd31
 		int newX = x_coord + xChange;
 		if(newX > Params.world_width - 1){ //check if Critter moved off the sides of the world
 			newX = newX % Params.world_width;
@@ -155,8 +165,8 @@ public abstract class Critter {
 		}
 	}
 
-	
-	
+
+
 	protected final void reproduce(Critter offspring, int direction) {
 	}
 
@@ -193,6 +203,7 @@ public abstract class Critter {
 	 * @return List of Critters.
 	 * @throws InvalidCritterException
 	 */
+<<<<<<< HEAD
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
  		List<Critter> result = new java.util.ArrayList<Critter>();
  		try{
@@ -212,6 +223,27 @@ public abstract class Critter {
 
  		return result;
  	}
+=======
+	 public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
+	 		List<Critter> result = new java.util.ArrayList<Critter>();
+	 		try{
+	 			Class class1 = Class.forName(critter_class_name);
+	 			for (Critter c: population) {
+	                  if (c.getClass() == class1){
+	                  	Critter newCritter = (Critter)class1.newInstance();
+	  					newCritter = c;
+	  					result.add(newCritter);
+	                  }
+	 			}
+	 		}
+	 		catch (Exception exception) {
+	 			InvalidCritterException e = new InvalidCritterException(critter_class_name);
+	 			throw e;
+	 		}
+
+	 		return result;
+	 	}
+>>>>>>> 57c2aa9e97dfca9f589c69e75fa41df7b370cd31
 
 	/**
 	 * Prints out how many Critters of each type there are on the board.
@@ -299,7 +331,7 @@ public abstract class Critter {
 
 
 	private static int timestep; //number of TimeSteps
-	
+
 	public static void worldTimeStep() {
 		timestep++;
 		doTimeSteps();
@@ -345,7 +377,7 @@ public abstract class Critter {
 						}
 						else{ // if b wins
 							b.energy += a.getEnergy() / 2;
-							population.remove(a);	
+							population.remove(a);
 						}
 
 				}

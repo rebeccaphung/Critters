@@ -12,6 +12,7 @@ package assignment4;
  */
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.io.*;
 
@@ -115,9 +116,15 @@ public class Main {
                     }
                     break;
                 case "stats":
-                    ArrayList<Critter> critters = new ArrayList<Critter>();
-                    //critters = getInstances(myPackage + "." + input[1]);
+                	try {
+                    List<Critter> critters = new ArrayList<Critter>();
+                    critters = Critter.getInstances(myPackage + "." + input[1]);
                     Critter.runStats(critters);
+                    //add switch case for specific subClasses
+                	}
+                	catch(InvalidCritterException e) {
+                		System.out.println(e);
+                	}
                     break;
             }
 
