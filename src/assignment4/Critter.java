@@ -50,14 +50,8 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 
-<<<<<<< HEAD
-	
-	private List<Integer> getLocation(){
-		List<Integer> coords = new ArrayList<Integer>();
-=======
 	private List<Integer> getLocation(){
 		List<Integer> coords = new java.util.ArrayList<Integer>();
->>>>>>> 57c2aa9e97dfca9f589c69e75fa41df7b370cd31
 		coords.add(0, x_coord);
 		coords.add(1, y_coord);
 		return coords;
@@ -65,13 +59,7 @@ public abstract class Critter {
 
 	private static boolean movedFlag;
 
-<<<<<<< HEAD
-	
-	private void changeLocation(int xChange, int yChange){
-=======
-
 	private final void changeLocation(int xChange, int yChange){
->>>>>>> 57c2aa9e97dfca9f589c69e75fa41df7b370cd31
 		int newX = x_coord + xChange;
 		if(newX > Params.world_width - 1){ //check if Critter moved off the sides of the world
 			newX = newX % Params.world_width;
@@ -189,6 +177,7 @@ public abstract class Critter {
 			Critter newCritter = (Critter)c.newInstance();
 			newCritter.x_coord = rand.nextInt(Params.world_width);
 			newCritter.y_coord = rand.nextInt(Params.world_height);
+			newCritter.energy = Params.start_energy;
 			population.add(newCritter);
 		}
 		catch(Exception exception) {
@@ -203,7 +192,6 @@ public abstract class Critter {
 	 * @return List of Critters.
 	 * @throws InvalidCritterException
 	 */
-<<<<<<< HEAD
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
  		List<Critter> result = new java.util.ArrayList<Critter>();
  		try{
@@ -222,28 +210,8 @@ public abstract class Critter {
          }
 
  		return result;
- 	}
-=======
-	 public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
-	 		List<Critter> result = new java.util.ArrayList<Critter>();
-	 		try{
-	 			Class class1 = Class.forName(critter_class_name);
-	 			for (Critter c: population) {
-	                  if (c.getClass() == class1){
-	                  	Critter newCritter = (Critter)class1.newInstance();
-	  					newCritter = c;
-	  					result.add(newCritter);
-	                  }
-	 			}
-	 		}
-	 		catch (Exception exception) {
-	 			InvalidCritterException e = new InvalidCritterException(critter_class_name);
-	 			throw e;
-	 		}
+	}
 
-	 		return result;
-	 	}
->>>>>>> 57c2aa9e97dfca9f589c69e75fa41df7b370cd31
 
 	/**
 	 * Prints out how many Critters of each type there are on the board.
@@ -335,7 +303,10 @@ public abstract class Critter {
 	public static void worldTimeStep() {
 		timestep++;
 		doTimeSteps();
-		//doEncounters();
+		doEncounters();
+		updateRestEnergy();
+		generateAlgae();
+		transitionBabies();
 	}
 
 
@@ -348,7 +319,7 @@ public abstract class Critter {
 	private static boolean encounteredFlag;
 
 	private static void doEncounters(){
-		/*encounteredFlag = true;
+		encounteredFlag = true;
 		for(int i = 0; i < population.size(); i++){
 			for(int j = i + 1; j < population.size(); j++){
 				Critter a = population.get(i);
@@ -385,16 +356,31 @@ public abstract class Critter {
 		}
 		}
 		encounteredFlag = false;
-		movedFlag = false;*/
+		movedFlag = false;
 	}
 
 	private static void updateRestEnergy(){
+		for (Critter c: population) {
+			c.energy -= Params.rest_energy_cost;
+			if(c.energy <= 0) {
+				population.remove(c);
+			}
+		}
 	}
 
 	private static void generateAlgae(){
+		for(int i = 0; i < Params.refresh_algae_count; i++) {
+			try {
+				makeCritter(myPackage + ".Algae");
+			} catch (InvalidCritterException e) {
+				System.out.println(e);
+			}
+		}
 	}
 
-	private static void generateBabies(){
+	private static void transitionBabies(){
+		population.addAll(babies);
+		babies.clear();
 	}
 
 	public static void displayWorld() {
