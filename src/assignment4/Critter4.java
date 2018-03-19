@@ -1,4 +1,4 @@
-/*  Critter3.java
+/*  Critter4.java
  *  One Weakness Critter
  *  Always tries to fight, unless it's fighting against its one weakness
  */

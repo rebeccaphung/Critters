@@ -87,45 +87,67 @@ public class Main {
                         Critter.worldTimeStep();
                     }
                     else{
-                        for(int i = 0; i < Integer.parseInt(input[1]); i++){
-                            Critter.worldTimeStep();
-                        }
+                        try {
+							for(int i = 0; i < Integer.parseInt(input[1]); i++){
+							    Critter.worldTimeStep();
+							}
+						} catch (NumberFormatException e) {
+							System.out.println("Invalid input syntax");
+						}
                     }
                     break;
                 case "seed":
-                    Critter.setSeed(Integer.parseInt(input[1]));
-                    break;
+					try {
+						Critter.setSeed(Integer.parseInt(input[1]));
+					} catch (NumberFormatException e1) {
+						System.out.println("Invalid input syntax");
+					}
+					break;
                 case "make":
                     if(input.length == 2){
                     	try {
-                    		Critter.makeCritter(myPackage + "." + input[1]);
+                    		Critter.makeCritter(input[1]);
                     	}
                     	catch(InvalidCritterException e){
                     		System.out.println(e);
                     	}
                     }
                     else{
-                        for(int i = 0; i < Integer.parseInt(input[2]); i++){
-                        	try {
-                        		Critter.makeCritter(myPackage + "." + input[1]);
-                        	}
-                        	catch(InvalidCritterException e) {
-                        		System.out.println(e);
-                        	}
-                        }
+                        try {
+							for(int i = 0; i < Integer.parseInt(input[2]); i++){
+								try {
+									Critter.makeCritter(input[1]);
+								}
+								catch(InvalidCritterException e) {
+									System.out.println(e);
+								}
+							}
+						} catch (NumberFormatException e) {
+							System.out.println("Invalid input syntax");
+						}
                     }
                     break;
                 case "stats":
                 	try {
                     List<Critter> critters = new ArrayList<Critter>();
-                    critters = Critter.getInstances(myPackage + "." + input[1]);
-                    Critter.runStats(critters);
-                    //add switch case for specific subClasses
+                    critters = Critter.getInstances(input[1]);
+                    java.lang.reflect.Method method;
+                    try {
+	                    Class<?> c = Class.forName(myPackage + "." + input[1]); 
+	                    method = c.getMethod("runStats", List.class);
+	                    method.invoke(critters.get(0), critters);
+                    }catch(Exception e) {
+                    	System.out.println("error");
+                    }
+                    //add switch case for specific subClasses?
                 	}
                 	catch(InvalidCritterException e) {
                 		System.out.println(e);
                 	}
                     break;
+                default:
+                	System.out.println("Invalid input syntax");
+                	break;
             }
 
             System.out.print("critters>");

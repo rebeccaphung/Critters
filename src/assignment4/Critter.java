@@ -156,6 +156,11 @@ public abstract class Critter {
 
 
 	protected final void reproduce(Critter offspring, int direction) {
+		this.energy = Math.floorDiv(this.energy, 2) + (Math.floorDiv(this.energy, 2) % 2);
+		offspring.energy = Math.floorDiv(offspring.energy, 2);
+		offspring.walk(direction);
+		offspring.energy += Params.walk_energy_cost;
+		babies.add(offspring);
 	}
 
 	public abstract void doTimeStep();
@@ -173,7 +178,7 @@ public abstract class Critter {
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
 		try {
-			Class c = Class.forName(critter_class_name);
+			Class c = Class.forName(myPackage + "." + critter_class_name);
 			Critter newCritter = (Critter)c.newInstance();
 			newCritter.x_coord = rand.nextInt(Params.world_width);
 			newCritter.y_coord = rand.nextInt(Params.world_height);
@@ -195,7 +200,7 @@ public abstract class Critter {
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
  		List<Critter> result = new java.util.ArrayList<Critter>();
  		try{
-             Class class1 = Class.forName(critter_class_name);
+             Class class1 = Class.forName(myPackage + "." + critter_class_name);
              for (Critter c: population) {
                  if (c.getClass() == class1){
  					//Critter newCritter = new Critter();
@@ -371,7 +376,7 @@ public abstract class Critter {
 	private static void generateAlgae(){
 		for(int i = 0; i < Params.refresh_algae_count; i++) {
 			try {
-				makeCritter(myPackage + ".Algae");
+				makeCritter("Algae");
 			} catch (InvalidCritterException e) {
 				System.out.println(e);
 			}

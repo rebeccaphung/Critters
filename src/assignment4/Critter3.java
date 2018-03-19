@@ -14,6 +14,7 @@ public class Critter3 extends Critter {
 
 	public Critter3() {
 		dir = Critter.getRandomInt(8);
+		fightsAvoided = 0;
 	}
 
     //tries to run away, otherwise kills itself
