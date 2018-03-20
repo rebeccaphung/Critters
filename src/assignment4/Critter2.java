@@ -3,8 +3,8 @@
  * Hermit Critter
  * Never reproduces
  * Never moves
- * Only fights if moved already and has to fight
- * runStats reports the longest time with no critter interactions
+ * Only fights if moved already and has to fight or if encounters algae
+ * runStats reports the longest time with no critter interactions (algae does not count)
  */
 
 package assignment4;
