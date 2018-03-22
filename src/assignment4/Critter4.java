@@ -9,9 +9,17 @@ public class Critter4 extends Critter {
     private int dir;
     private String weakness;
 
+    /**
+     * Critter4 as a String
+     * @return string representation of Critter4
+     */
 	@Override
 	public String toString() { return "4"; }
 
+    /**
+     * Critter4 constructor, randomly chooses a weakness
+     * @return does not return
+     */
 	public Critter4() {
 		dir = Critter.getRandomInt(8);
         int chooseWeakness = Critter.getRandomInt(6);
@@ -37,7 +45,10 @@ public class Critter4 extends Critter {
         }
 	}
 
-    //always fights, unless other is its weakness, then tries to run
+    /**
+     * Critter4 fight function, always fights, unless other is its weakness, then tries to run
+     * @return false if other is its weakness, otherwise true
+     */
 	public boolean fight(String other) {
         if(other.equals(weakness)){
             run(dir);
@@ -48,10 +59,14 @@ public class Critter4 extends Critter {
         }
     }
 
+    /**
+     * Critter4 randomly stays, walks, or runs, then tries to reproduce
+     * @return does not return
+     */
 	@Override
 	public void doTimeStep() {
 
-        int movement = Critter.getRandomInt(999) % 3; //randomly stays, walks, or runs
+        int movement = Critter.getRandomInt(3); //randomly stays, walks, or runs
         if(movement == 0){
             walk(dir);
         }
@@ -68,6 +83,10 @@ public class Critter4 extends Critter {
 		dir = Critter.getRandomInt(8);
 	}
 
+    /**
+     * prints out total number of Critter4 and how many Critter4 are weak against each type of Critter
+     * @return does not return
+     */
     public static void runStats(java.util.List<Critter> critters) {
 		int totalWeakAgainstAlgae = 0;
 		int totalWeakAgainstCraig = 0;
