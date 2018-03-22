@@ -10,8 +10,6 @@
 
 package assignment4;
 
-import java.util.Arrays;
-
 public class Critter1 extends Critter{
 	private int dir;
 	private int algaeCount;
@@ -49,14 +47,6 @@ public class Critter1 extends Critter{
 		timeCount++;
 	}
 	
-	protected int getEvaded() {
-		return evaded;
-	}
-	
-	protected int getAlgaeCount() {
-		return algaeCount;
-	}
-	
 	public boolean fight(String other) {
 		if(other.equals("@")) {
 			algaeCount++;
@@ -76,8 +66,8 @@ public class Critter1 extends Critter{
 		for( Critter w: whales) {
 			indexNum = whales.indexOf(w);
 			health = ((Critter1) w).getEnergy();
-			aCount = ((Critter1) w).getAlgaeCount();
-			eCount = ((Critter1) w).getEvaded();
+			aCount = ((Critter1) w).algaeCount;
+			eCount = ((Critter1) w).evaded;
 			position = ((Critter1) w).getLocation();
 			System.out.println("Critter1 - Index: " + indexNum + "\t" + "Algae consumed: " + aCount + "\t" + "Critters evaded: " + eCount);
 			System.out.println("Health: " + health + "\t" + "Coordinates: " + "(" + position.get(0) + ", " + position.get(1) + ")" );

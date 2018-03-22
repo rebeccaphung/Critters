@@ -52,10 +52,10 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 
-	/** get location of Critter to compare for encounters
+	/** 
+	 * get location of Critter to compare for encounters
 	 * @return list with each coord
 	 */
-	
 	//change back to private
 	protected List<Integer> getLocation(){
 		List<Integer> coords = new java.util.ArrayList<Integer>();
@@ -66,7 +66,8 @@ public abstract class Critter {
 
 	private static boolean movedFlag;
 
-	/** change location based on how much xChange and yChange
+	/** 
+	 * change location based on how much xChange and yChange
 	 * @param xChange how much Critter moves horizontally
 	 * @param yChange how much Critter moves vertically
 	 * @return does not return
@@ -104,7 +105,8 @@ public abstract class Critter {
 		movedFlag = true;
 	}
 
-	/** move Critter 1 space
+	/** 
+	 * move Critter 1 space
 	 * @param direction direction Critter moves in
 	 * @return does not return
 	 */
@@ -331,7 +333,8 @@ public abstract class Critter {
 
 	private static int timestep; //number of TimeSteps
 
-	/** does each Critter's time step and does encounters
+	/** 
+	 * does each Critter's time step and does encounters
 	 * @return does not return
 	 */
 	public static void worldTimeStep() {
@@ -343,7 +346,8 @@ public abstract class Critter {
 		transitionBabies();
 	}
 
-	/** does each Critter's timestep
+	/** 
+	 * does each Critter's timestep
 	 * @return does not return
 	 */
 	private static void doTimeSteps(){
@@ -354,7 +358,8 @@ public abstract class Critter {
 
 	private static boolean encounteredFlag;
 
-	/** does encounters for any Critters in the same location
+	/** 
+	 * does encounters for any Critters in the same location
 	 * @return does not return
 	 */
 	private static void doEncounters(){
@@ -424,7 +429,8 @@ public abstract class Critter {
 			}
 		}
 	}
-
+	
+	
 	private static void transitionBabies(){
 		population.addAll(babies);
 		babies.clear();

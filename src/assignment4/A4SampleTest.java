@@ -72,12 +72,7 @@ public class A4SampleTest{
 		String fileFolder = "kill_all_critter";
 		String[] inputs = {TESTSRCDIR + fileFolder + "/input.txt" ,"test"};
 		
-		try {
-			Main.main(inputs);
-		} catch (InvalidCritterException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		Main.main(inputs);
 		outContent = Main.testOutputString;
 		
 		Scanner scanner = null;
@@ -127,12 +122,7 @@ public class A4SampleTest{
 		String fileFolder = "error_processing";
 		String[] inputs = {TESTSRCDIR + fileFolder + "/input.txt" ,"test"};
 		
-		try {
-			Main.main(inputs);
-		} catch (InvalidCritterException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		Main.main(inputs);
 		outContent = Main.testOutputString;
 		
 		Scanner scanner = null;
@@ -174,12 +164,7 @@ public class A4SampleTest{
 		String[] inputs = {TESTSRCDIR + fileFolder + "/input.txt" ,"test"};
 		
 		
-		try {
-			Main.main(inputs);
-		} catch (InvalidCritterException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		Main.main(inputs);
 		outContent = Main.testOutputString;
 		
 		
@@ -227,12 +212,7 @@ public class A4SampleTest{
 		Params.world_width = 20;
 		Params.world_height = 20;
 	
-		try {
-			Main.main(inputs);
-		} catch (InvalidCritterException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		Main.main(inputs);
 		outContent = Main.testOutputString;
 		
 		Scanner scanner = null;
