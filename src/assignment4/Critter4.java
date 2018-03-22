@@ -23,7 +23,7 @@ public class Critter4 extends Critter {
                 weakness = "C";
                 break;
             case 2:
-                weakness = "1"; //TODO put in richard's critters
+                weakness = "1";
                 break;
             case 3:
                 weakness = "2";

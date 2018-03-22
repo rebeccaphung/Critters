@@ -12,6 +12,7 @@ package assignment4;
  */
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -50,7 +51,7 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 
-	private List<Integer> getLocation(){
+	protected List<Integer> getLocation(){
 		List<Integer> coords = new java.util.ArrayList<Integer>();
 		coords.add(0, x_coord);
 		coords.add(1, y_coord);
@@ -96,7 +97,6 @@ public abstract class Critter {
 		energy -= Params.walk_energy_cost;
 		switch (direction){
 			case 0:
-				this.x_coord = 0;
 				changeLocation(1, 0);
 				break;
 			case 1:
@@ -121,6 +121,7 @@ public abstract class Critter {
 				changeLocation(1, -1);
 				break;
 		}
+		System.out.println("walk" + x_coord + ", " + y_coord);
 	}
 
 	protected final void run(int direction) {
@@ -151,13 +152,21 @@ public abstract class Critter {
 				changeLocation(2, -2);
 				break;
 		}
+		System.out.println("run" + x_coord + ", " + y_coord);
 	}
 
 
 
 	protected final void reproduce(Critter offspring, int direction) {
-		this.energy = Math.floorDiv(this.energy, 2) + (Math.floorDiv(this.energy, 2) % 2);
-		offspring.energy = Math.floorDiv(offspring.energy, 2);
+		int parentEnergy = this.energy;
+		double rounding = ((double) parentEnergy / (double) 2) % 1;
+		this.energy = Math.floorDiv(parentEnergy, 2);
+		if(rounding > 0) {
+			this.energy += 1;
+		}
+		offspring.x_coord = this.x_coord;
+		offspring.y_coord = this.y_coord;
+		offspring.energy = Math.floorDiv(parentEnergy, 2);
 		offspring.walk(direction);
 		offspring.energy += Params.walk_energy_cost;
 		babies.add(offspring);
@@ -365,10 +374,14 @@ public abstract class Critter {
 	}
 
 	private static void updateRestEnergy(){
-		for (Critter c: population) {
-			c.energy -= Params.rest_energy_cost;
-			if(c.energy <= 0) {
-				population.remove(c);
+		if(!population.isEmpty()) {
+			Iterator itrCrit = population.iterator();
+			while(itrCrit.hasNext()) {
+				Critter c = (Critter) itrCrit.next();
+				c.energy -= Params.rest_energy_cost;
+				if(c.energy <= 0) {
+					itrCrit.remove();
+				}
 			}
 		}
 	}
