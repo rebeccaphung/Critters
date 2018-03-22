@@ -139,7 +139,7 @@ public class Main {
                     }catch(Exception e) {
                     	System.out.println("error");
                     }
-                    //add switch case for specific subClasses?
+                    
                 	}
                 	catch(InvalidCritterException e) {
                 		System.out.println(e);

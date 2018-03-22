@@ -30,6 +30,7 @@ public class Critter1 extends Critter{
 		algaeCount = 0;
 	}
 	
+	@Override
 	public void doTimeStep() {
 		if(!rest) {
 			walk(dir);
@@ -57,7 +58,8 @@ public class Critter1 extends Critter{
 	}
 	
 	public boolean fight(String other) {
-		if(other == "@") {
+		if(other.equals("@")) {
+			algaeCount++;
 			return true;
 		}
 		run(dir);

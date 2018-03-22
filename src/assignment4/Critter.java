@@ -52,14 +52,12 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 
-<<<<<<< HEAD
-	protected List<Integer> getLocation(){
-=======
 	/** get location of Critter to compare for encounters
 	 * @return list with each coord
 	 */
-	private List<Integer> getLocation(){
->>>>>>> origin/master
+	
+	//change back to private
+	protected List<Integer> getLocation(){
 		List<Integer> coords = new java.util.ArrayList<Integer>();
 		coords.add(0, x_coord);
 		coords.add(1, y_coord);
@@ -138,7 +136,6 @@ public abstract class Critter {
 				changeLocation(1, -1);
 				break;
 		}
-		System.out.println("walk" + x_coord + ", " + y_coord);
 	}
 
 	/** move Critter 2 spaces
@@ -173,7 +170,6 @@ public abstract class Critter {
 				changeLocation(2, -2);
 				break;
 		}
-		System.out.println("run" + x_coord + ", " + y_coord);
 	}
 
 
@@ -367,24 +363,28 @@ public abstract class Critter {
 			for(int j = i + 1; j < population.size(); j++){
 				Critter a = population.get(i);
 				Critter b = population.get(j);
-				if(a.getLocation() == b.getLocation()){ //if 2 Critters in same location, fight
-					int aFightPower, bFightPower;
+				if(a.x_coord == b.x_coord && a.y_coord == b.y_coord){ //if 2 Critters in same location, fight
+					int aFightPower=0, bFightPower=0;
 
 					if(a.fight(b.toString())){ //if a decides to fight, set aFightPower
-						aFightPower = getRandomInt(a.getEnergy());
+						if(a.energy >0) {
+							aFightPower = getRandomInt(a.getEnergy());
+						}
 					}
 					else{
 						aFightPower = 0;
 					}
 
 					if(b.fight(a.toString())){ //if b decides to fight, set bFightPower
-						bFightPower = getRandomInt(b.getEnergy());
+						if(b.energy > 0) {
+							bFightPower = getRandomInt(b.getEnergy());
+						}
 					}
 					else{
 						bFightPower = 0;
 					}
 
-					if(a.getLocation() == b.getLocation()){ //if 2 Critters are still in same location, see which Critter wins
+					if(a.x_coord == b.x_coord && a.y_coord == b.y_coord){ //if 2 Critters are still in same location, see which Critter wins
 						if(aFightPower >= bFightPower){ //if a wins (or there's a tie)
 							a.energy += b.getEnergy() / 2;
 							population.remove(b);
