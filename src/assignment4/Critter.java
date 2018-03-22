@@ -40,8 +40,9 @@ public abstract class Critter {
 		rand = new java.util.Random(new_seed);
 	}
 
-
-	/* a one-character long string that visually depicts your critter in the ASCII interface */
+	/** a one-character long string that visually depicts your critter in the ASCII interface
+	 * @return String of critter
+	 */
 	public String toString() { return ""; }
 
 	private int energy = 0;
@@ -50,6 +51,9 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 
+	/** get location of Critter to compare for encounters
+	 * @return list with each coord
+	 */
 	private List<Integer> getLocation(){
 		List<Integer> coords = new java.util.ArrayList<Integer>();
 		coords.add(0, x_coord);
@@ -59,6 +63,11 @@ public abstract class Critter {
 
 	private static boolean movedFlag;
 
+	/** change location based on how much xChange and yChange
+	 * @param xChange how much Critter moves horizontally
+	 * @param yChange how much Critter moves vertically
+	 * @return does not return
+	 */
 	private final void changeLocation(int xChange, int yChange){
 		int newX = x_coord + xChange;
 		if(newX > Params.world_width - 1){ //check if Critter moved off the sides of the world
@@ -92,6 +101,10 @@ public abstract class Critter {
 		movedFlag = true;
 	}
 
+	/** move Critter 1 space
+	 * @param direction direction Critter moves in
+	 * @return does not return
+	 */
 	protected final void walk(int direction) {
 		energy -= Params.walk_energy_cost;
 		switch (direction){
@@ -123,6 +136,10 @@ public abstract class Critter {
 		}
 	}
 
+	/** move Critter 2 spaces
+	 * @param direction direction Critter moves in
+	 * @return does not return
+	 */
 	protected final void run(int direction) {
 		energy -= Params.run_energy_cost;
 		switch (direction){
@@ -305,6 +322,9 @@ public abstract class Critter {
 
 	private static int timestep; //number of TimeSteps
 
+	/** does each Critter's time step and does encounters
+	 * @return does not return
+	 */
 	public static void worldTimeStep() {
 		timestep++;
 		doTimeSteps();
@@ -314,7 +334,9 @@ public abstract class Critter {
 		transitionBabies();
 	}
 
-
+	/** does each Critter's timestep
+	 * @return does not return
+	 */
 	private static void doTimeSteps(){
 		for(Critter c: population){
 			c.doTimeStep();
@@ -323,6 +345,9 @@ public abstract class Critter {
 
 	private static boolean encounteredFlag;
 
+	/** does encounters for any Critters in the same location
+	 * @return does not return
+	 */
 	private static void doEncounters(){
 		encounteredFlag = true;
 		for(int i = 0; i < population.size(); i++){
@@ -393,7 +418,7 @@ public abstract class Critter {
 		final int displayHeight = Params.world_height + 2;
 		String[][] world = new String[displayHeight][displayWidth];
 		int x, y;
-		
+
 		for(y = 0; y < world.length; y++) {
 			for(x = 0; x < world[y].length; x++) {
 				world[y][x] = " ";
@@ -409,13 +434,13 @@ public abstract class Critter {
 				}
 			}
 		}
-		
+
 		for(int i = 0; i < population.size(); i++) {
 			x = population.get(i).x_coord + 1;
 			y = population.get(i).y_coord + 1;
 			world[y][x] = population.get(i).toString();
 		}
-		
+
 		for(y = 0; y < world.length; y++) {
 			for(x = 0; x < world[y].length; x++) {
 				System.out.print(world[y][x]);
