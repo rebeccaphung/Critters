@@ -67,7 +67,7 @@ public class Critter2 extends Critter{
 	 * @return boolean for fight
 	 */
 	public boolean fight(String other) {
-		if(other.toString() == "@") {
+		if(other.equals("@")) {
 			
 			return true;
 		}
