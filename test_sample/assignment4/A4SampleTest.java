@@ -53,7 +53,7 @@ public class A4SampleTest{
      */
 	 
 	@Test 
-	public void KillCritters(){
+	public void KillCritters() throws InvalidCritterException{
 	
 		
 		//Uncomment Following Codeblock to test 
@@ -101,7 +101,7 @@ public class A4SampleTest{
 	 */
 	
 	@Test 
-	public void ParseErrors(){
+	public void ParseErrors() throws InvalidCritterException{
 		
 	
 		//Uncomment following codeblock to test with parameters
@@ -144,7 +144,7 @@ public class A4SampleTest{
 	 */
 	
 	@Test
-	public void showEmptyWorld(){
+	public void showEmptyWorld() throws InvalidCritterException{
 		
 		/*
 		 * Test: InvalidCritter
@@ -191,13 +191,13 @@ public class A4SampleTest{
 	 */
 	
 	@Test 
-	public void ParseMakeLargeCritter(){
+	public void ParseMakeLargeCritter() throws InvalidCritterException{
 		// Test for make and show command
 		// Expects entire board to be filled with critters
 		
 		
 		Params.world_width = 20;
-		Params.world_width = 20;
+		Params.world_height = 20;
 		Params.walk_energy_cost = 2;
 		Params.run_energy_cost = 5;
 		Params.rest_energy_cost = 1;

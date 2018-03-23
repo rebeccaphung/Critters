@@ -1,3 +1,15 @@
+/* CRITTERS Critter2.java
+ * EE422C Project 4 submission by
+ * Replace <...> with your actual data.
+ * Rebecca Phung
+ * rp32526
+ * 15455
+ * Richard Li
+ * rgl568
+ * 15460
+ * Spring 2018
+ */
+
 /*
  * Critter2.java
  * Hermit Critter
@@ -15,9 +27,18 @@ public class Critter2 extends Critter{
 	private int prevEnergy;
 	private int energyGained;
 	
+	/**
+	 * Critter2 as a string
+	 * @return "2" the marker of Critter2
+	 */
 	@Override
 	public String toString(){ return "2"; }
 	
+	/**
+	 * Critter2 constructor
+	 * Initializes numIsolation and eneergyGained to 0
+	 * Sets prevEnergy as the parameter start energy
+	 */
 	public Critter2(){
 		dir = Critter.getRandomInt(8);
 		numIsolation = 0;
@@ -25,6 +46,11 @@ public class Critter2 extends Critter{
 		energyGained = 0;
 	}
 	
+	/**
+	 * Critter2 time step
+	 * Calculates how many time steps since the last non-algae critter interaction
+	 * Calculates amount of energy gained
+	 */
 	@Override
 	public void doTimeStep() {
 		if(this.getEnergy() > prevEnergy) {
@@ -34,7 +60,12 @@ public class Critter2 extends Critter{
 		numIsolation++;
 	}
 	
-	
+	/**
+	 * Critter2 fight function
+	 * Only fights with algae
+	 * If encounters another critter, attempt to run in a random direction and reset the isolation counter to 0
+	 * @return boolean for fight
+	 */
 	public boolean fight(String other) {
 		if(other.toString() == "@") {
 			
@@ -46,6 +77,10 @@ public class Critter2 extends Critter{
 		return false;
 	}
 	
+	/**
+	 * Critter2 runStats
+	 * Reports the current energy, energy gained, and time in isolation for each instance of Critter2 in population
+	 */
 	public static void runStats(java.util.List<Critter> hermit) {
 		int energy;
 		int eGained;

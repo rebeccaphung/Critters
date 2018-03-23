@@ -33,6 +33,12 @@ public abstract class Critter {
 	}
 
 	private static java.util.Random rand = new java.util.Random();
+	/*
+	 * Random int Generator
+	 * Generates a random integer between 0 and parameter max
+	 * @param max, maximum integer that will be generated
+	 * @return random int
+	 */
 	public static int getRandomInt(int max) {
 		return rand.nextInt(max);
 	}
@@ -51,18 +57,6 @@ public abstract class Critter {
 
 	private int x_coord;
 	private int y_coord;
-
-	/** 
-	 * get location of Critter to compare for encounters
-	 * @return list with each coord
-	 */
-	//change back to private
-	protected List<Integer> getLocation(){
-		List<Integer> coords = new java.util.ArrayList<Integer>();
-		coords.add(0, x_coord);
-		coords.add(1, y_coord);
-		return coords;
-	}
 
 	private static boolean movedFlag;
 
@@ -94,7 +88,7 @@ public abstract class Critter {
 				return;
 			}
 			for(Critter c : population){
-				if((c.getLocation().get(0) == newX) && (c.getLocation().get(1) == newY)){
+				if((c.x_coord == newX) && (c.y_coord == newY)){
 					return;
 				}
 			}
@@ -174,8 +168,15 @@ public abstract class Critter {
 		}
 	}
 
-
-
+	/**
+	 * Critter Reproduce function
+	 * Sets the parent energy to 1/2 (rounds up for fractions)
+	 * Adds offspring to baby list
+	 * Offspring has 1/2 energy of parent (round down for fractions)
+	 * Sets offspring location 1 space adjacent to parent according to direction
+	 * @param offspring
+	 * @param direction
+	 */
 	protected final void reproduce(Critter offspring, int direction) {
 		int parentEnergy = this.energy;
 		double rounding = ((double) parentEnergy / (double) 2) % 1;
@@ -406,7 +407,11 @@ public abstract class Critter {
 		encounteredFlag = false;
 		movedFlag = false;
 	}
-
+	
+	/**
+	 * Subtracts the rest energy cost in the params class each critter instance in the population list
+	 * removes the critter instances are at 0 or less energy
+	 */
 	private static void updateRestEnergy(){
 		if(!population.isEmpty()) {
 			Iterator itrCrit = population.iterator();
@@ -420,6 +425,9 @@ public abstract class Critter {
 		}
 	}
 
+	/**
+	 * Generates algae according to the refresh algae count in the params class
+	 */
 	private static void generateAlgae(){
 		for(int i = 0; i < Params.refresh_algae_count; i++) {
 			try {
@@ -430,12 +438,22 @@ public abstract class Critter {
 		}
 	}
 	
-	
+	/**
+	 * Moves the critter instances in the babies list to the population list
+	 * Clears the baby list after the transition
+	 */
 	private static void transitionBabies(){
 		population.addAll(babies);
 		babies.clear();
 	}
-
+	
+	/**
+	 * View component
+	 * Creates a border and an area defined by the world width and world height constants from the params class
+	 * Iterates through the population list and records each critter instance string representation according to their x_coord and y_coord
+	 * If there are multiple critters at one location, the last critter added to the list at that spot gets its symbol displayed
+	 * Outputs the grid world
+	 */
 	public static void displayWorld() {
 		final int displayWidth = Params.world_width + 2;
 		final int displayHeight = Params.world_height + 2;

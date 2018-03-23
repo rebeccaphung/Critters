@@ -72,88 +72,123 @@ public class Main {
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
 
-        System.out.print("critters>");
+        controller(kb);
+
+    }
+    
+    /**
+     * Controller component
+     * Takes in the input and commences the appropriate functions in regards to the command keywords
+     * "step" goes through one time step
+     * "step <integer>" goes through <integer> time steps
+     * "show" calls displays world and outputs the view component
+     * "make <Critter>" creates one instance of the <critter> type and adds it to the population list
+     * "make <Critter> <integer>" creates <integer> instances of the <critter> type and adds them to the population list
+     * "seed <integer>" invokes Critter.setSeed using <integer> as the new random seed
+     * "stats <Critter>" calls the runStats function of that particular <Critter> class
+     * "quit" ends the program
+     * @param kb
+     */
+    public static void controller(Scanner kb) {
+    	System.out.print("critters>");
         String line = kb.nextLine();
         String[] input = line.split("\\s+");	//groups all white space as delimiters
         System.out.println();
 
-        while(input[0] != "quit"){
-            switch(input[0]){
-                case "show":
-                    Critter.displayWorld();
-                    break;
-                case "step":
-                    if(input.length == 1){
-                        Critter.worldTimeStep();
-                    }
-                    else{
-                        try {
+        while(!input[0].equals("quit")){
+        	if(input.length == 1) {
+        		
+        		switch(input[0]){
+        			case "show":
+        				Critter.displayWorld();
+        				break;
+        			case "step":
+        				Critter.worldTimeStep();
+        				break;
+        			default:
+                    	System.out.println("error processing: " + line);
+                    	break;
+        		}           	
+        	}
+        	else if(input.length == 2) {
+        		
+        		switch(input[0]){
+        			case "step":
+						try {
 							for(int i = 0; i < Integer.parseInt(input[1]); i++){
 							    Critter.worldTimeStep();
 							}
 						} catch (NumberFormatException e) {
-							System.out.println("Invalid input syntax");
+							System.out.println("error processing: " + line);
 						}
-                    }
-                    break;
-                case "seed":
-					try {
-						Critter.setSeed(Integer.parseInt(input[1]));
-					} catch (NumberFormatException e1) {
-						System.out.println("Invalid input syntax");
-					}
-					break;
-                case "make":
-                    if(input.length == 2){
-                    	try {
+						break;
+        			case "seed":
+    					try {
+    						Critter.setSeed(Integer.parseInt(input[1]));
+    					} catch (NumberFormatException e1) {
+    						System.out.println("error processing: " + line);
+    					}
+    					break;
+        			case "make":
+        				try {
                     		Critter.makeCritter(input[1]);
                     	}
                     	catch(InvalidCritterException e){
                     		System.out.println(e);
                     	}
-                    }
-                    else{
-                        try {
-							for(int i = 0; i < Integer.parseInt(input[2]); i++){
-								try {
-									Critter.makeCritter(input[1]);
-								}
-								catch(InvalidCritterException e) {
-									System.out.println(e);
-								}
+        				break;
+        			case "stats":
+                    	try {
+    	                    List<Critter> critters = new ArrayList<Critter>();
+    	                    critters = Critter.getInstances(input[1]);
+    	                    java.lang.reflect.Method method;
+    		                    try {
+    			                    Class<?> c = Class.forName(myPackage + "." + input[1]); 
+    			                    method = c.getMethod("runStats", List.class);
+    			                    if(critters.isEmpty()) {
+    			                    	method.invoke(c, critters);
+    			                    }else {
+    			                    	method.invoke(critters.get(0), critters);
+    			                    }
+    		                    }catch(Exception e) {
+    		                    	System.out.println("error processing: " + line);
+    		                    }
+                    	}
+                    	catch(InvalidCritterException e) {
+                    		System.out.println(e);
+                    	}
+                        break;
+                    default:
+                    	System.out.println("error processing: " + line);
+                    	break;
+        		}
+        	}
+        	else if(input.length == 3) {
+        		if(input[0].equals("make")) {
+        			try {
+						for(int i = 0; i < Integer.parseInt(input[2]); i++){
+							try {
+								Critter.makeCritter(input[1]);
 							}
-						} catch (NumberFormatException e) {
-							System.out.println("Invalid input syntax");
+							catch(InvalidCritterException e) {
+								System.out.println(e);
+							}
 						}
-                    }
-                    break;
-                case "stats":
-                	try {
-                    List<Critter> critters = new ArrayList<Critter>();
-                    critters = Critter.getInstances(input[1]);
-                    java.lang.reflect.Method method;
-                    try {
-	                    Class<?> c = Class.forName(myPackage + "." + input[1]); 
-	                    method = c.getMethod("runStats", List.class);
-	                    method.invoke(critters.get(0), critters);
-                    }catch(Exception e) {
-                    	System.out.println("error");
-                    }
-                    
-                	}
-                	catch(InvalidCritterException e) {
-                		System.out.println(e);
-                	}
-                    break;
-                default:
-                	System.out.println("Invalid input syntax");
-                	break;
-            }
-
+					} catch (NumberFormatException e) {
+						System.out.println("error processing: " + line);
+					}
+                }
+        		else {
+            		System.out.println("error processing: " + line);
+            	}
+        	}
+        	else {
+        		System.out.println("error processing: " + line);
+        	}
+       		
             System.out.print("critters>");
             line = kb.nextLine();
             input = line.split("\\s+");
-            System.out.println();
         }
 
         /* Write your code above */

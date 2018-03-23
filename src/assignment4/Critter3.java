@@ -1,3 +1,15 @@
+/* CRITTERS Critter3.java
+ * EE422C Project 4 submission by
+ * Replace <...> with your actual data.
+ * Rebecca Phung
+ * rp32526
+ * 15455
+ * Richard Li
+ * rgl568
+ * 15460
+ * Spring 2018
+ */
+
 /*  Critter3.java
  *  Pacifist Critter
  *  Always tries to run away, or else it kills itself

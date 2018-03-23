@@ -1,3 +1,15 @@
+/* CRITTERS Critter1.java
+ * EE422C Project 4 submission by
+ * Replace <...> with your actual data.
+ * Rebecca Phung
+ * rp32526
+ * 15455
+ * Richard Li
+ * rgl568
+ * 15460
+ * Spring 2018
+ */
+
 /*
  * Critter1.java
  * Whale Critter
@@ -17,9 +29,18 @@ public class Critter1 extends Critter{
 	private boolean rest;
 	private int timeCount;
 	
+	/**
+     * Critter 2 as a String
+     * @return string representation of Critter2
+     */
 	@Override
 	public String toString() { return "1"; }
 	
+	/**
+	 * Critter1 constructor
+	 * Initializes timeCount, evaded, and algaeCount to 0
+	 * rest is set to false
+	 */
 	public Critter1() {
 		dir = Critter.getRandomInt(8);
 		rest = false;
@@ -28,6 +49,11 @@ public class Critter1 extends Critter{
 		algaeCount = 0;
 	}
 	
+	/**
+	 * Critter1 walks every other time step
+	 * Reproduces at when its energy is more than double the required reproduction energy
+	 * Changes directions every 10 time steps
+	 */
 	@Override
 	public void doTimeStep() {
 		if(!rest) {
@@ -47,6 +73,12 @@ public class Critter1 extends Critter{
 		timeCount++;
 	}
 	
+	/**
+	 * Critter1 fight function
+	 * If the critter encountered is algae, fight and increase algae counter
+	 * If encounter any critter besides algae, attempt to run and increase evaded counter
+	 * @return boolean to fight
+	 */
 	public boolean fight(String other) {
 		if(other.equals("@")) {
 			algaeCount++;
@@ -57,20 +89,19 @@ public class Critter1 extends Critter{
 		return false;
 	}
 	
+	/**
+	 * Critter1 runStat
+	 * Reports the amount of algae consumed and critters evaded for every instance of Critter1 in population
+	 */
 	public static void runStats(java.util.List<Critter> whales) {
 		int aCount;
 		int eCount;
 		int indexNum;
-		int health;
-		java.util.List<Integer> position = new java.util.ArrayList<Integer>();
 		for( Critter w: whales) {
 			indexNum = whales.indexOf(w);
-			health = ((Critter1) w).getEnergy();
 			aCount = ((Critter1) w).algaeCount;
 			eCount = ((Critter1) w).evaded;
-			position = ((Critter1) w).getLocation();
 			System.out.println("Critter1 - Index: " + indexNum + "\t" + "Algae consumed: " + aCount + "\t" + "Critters evaded: " + eCount);
-			System.out.println("Health: " + health + "\t" + "Coordinates: " + "(" + position.get(0) + ", " + position.get(1) + ")" );
 		}
 	}
 }

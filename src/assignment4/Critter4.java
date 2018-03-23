@@ -1,3 +1,15 @@
+/* CRITTERS Critter4.java
+ * EE422C Project 4 submission by
+ * Replace <...> with your actual data.
+ * Rebecca Phung
+ * rp32526
+ * 15455
+ * Richard Li
+ * rgl568
+ * 15460
+ * Spring 2018
+ */
+
 /*  Critter4.java
  *  One Weakness Critter
  *  Always tries to fight, unless it's fighting against its one weakness
