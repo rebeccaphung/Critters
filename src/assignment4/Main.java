@@ -15,7 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.io.*;
-import javafx.*;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 
 /*
@@ -27,43 +35,19 @@ public class Main extends Application{
 	
 	static GridPane grid = new GridPane();
 
-	@Override
-	public void start(Stage primaryStage) {
-		try {			
-
-			grid.setGridLinesVisible(true);
-
-			Scene scene = new Scene(grid, 500, 500);
-			primaryStage.setScene(scene);
-			
-			primaryStage.show();
-			
-			// Paints the icons.
-			Painter.paint();
-			
-		} catch(Exception e) {
-			e.printStackTrace();		
-		}
-	}
-	
-	public static void main(String[] args) {
-		launch(args);
-	}
-
-/*    static Scanner kb;	// scanner connected to keyboard input, or input file
+    static Scanner kb;	// scanner connected to keyboard input, or input file
     private static String inputFile;	// input file, used instead of keyboard input if specified
     static ByteArrayOutputStream testOutputString;	// if test specified, holds all console output
     private static String myPackage;	// package of Critter file.  Critter cannot be in default pkg.
     private static boolean DEBUG = false; // Use it or not, as you wish!
     static PrintStream old = System.out;	// if you want to restore output to console
 
-
     // Gets the package name.  The usage assumes that Critter and its subclasses are all in the same package.
     static {
         myPackage = Critter.class.getPackage().toString().split(" ")[1];
     }
 
-    *//**
+    /**
      * Main method.
      * @param args args can be empty.  If not empty, provide two parameters -- the first is a file name,
      * and the second is test (for test output, where all output to be directed to a String), or nothing.
@@ -103,13 +87,10 @@ public class Main extends Application{
     }
 
     @Override
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
 
         primaryStage.setTitle("Critters");
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(5);
-        grid.setHgap(5);
 
         Button quitBtn = new Button("Quit");
         GridPane.setConstraints(quitBtn, 0, 0);
@@ -117,7 +98,7 @@ public class Main extends Application{
         quitBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                System.exit();
+                System.exit(0);
             }
         });
 
@@ -133,7 +114,7 @@ public class Main extends Application{
             @Override
             public void handle(ActionEvent e) {
                 try{
-                    makeValue = Interger.parseInt(makeField.getText);
+                    makeValue = Integer.parseInt(makeField.getText());
                     //add make functionality
                 }
                 catch(Exception c){
@@ -157,7 +138,7 @@ public class Main extends Application{
             @Override
             public void handle(ActionEvent e) {
                 try{
-                    stepValue = Interger.parseInt(stepField.getText);
+                    stepValue = Integer.parseInt(stepField.getText());
                     //add step functionality
                 }
                 catch(Exception c){
@@ -185,7 +166,7 @@ public class Main extends Application{
             @Override
             public void handle(ActionEvent e) {
                 try{
-                    seedValue = Interger.parseInt(seedField.getText);
+                    seedValue = Integer.parseInt(seedField.getText());
                     //add seed functionality
                 }
                 catch(Exception c){
@@ -333,3 +314,5 @@ public class Main extends Application{
 
 
 }
+		
+	}
