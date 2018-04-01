@@ -57,10 +57,10 @@ public class Critter3 extends Critter {
 	public void doTimeStep() {
 
         int movement = Critter.getRandomInt(3); //randomly stays, walks, or runs
-        if(movement == 0){
+        if(movement == 0 && look(dir, 1) == NULL){
             walk(dir);
         }
-        else if(movement == 1){
+        else if(movement == 1 && look(dir, 2) == NULL){
             run(dir);
         }
 
@@ -88,10 +88,12 @@ public class Critter3 extends Critter {
 		stats += "" + totalFightsAvoided + " total number of fights avoided \n";
 		return stats;
 	}
-    
-	@Override
-	public CritterShape viewShape() { return CritterShape.SQUARE; }
 
 	@Override
-	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.BLUE; }
+	public CritterShape viewShape() { return CritterShape.DIAMOND; }
+
+	@Override
+	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.PAPAYAWHIP; }
+    @Override
+	public javafx.scene.paint.Color viewFillColor() { return javafx.scene.paint.Color.OLIVEDRAB; }
 }
