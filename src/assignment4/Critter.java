@@ -214,7 +214,7 @@ public abstract class Critter {
 			newCritter.energy = Params.start_energy;
 			population.add(newCritter);
 		}
-		catch(Exception exception) {
+		catch(Exception | java.lang.NoClassDefFoundError error) {
 			InvalidCritterException e  = new InvalidCritterException(critter_class_name);
 			throw e;
 		}
