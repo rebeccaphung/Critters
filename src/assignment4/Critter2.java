@@ -73,7 +73,12 @@ public class Critter2 extends Critter{
 			
 			return true;
 		}
-		run(dir);
+		for(int runDirection = 0; runDirection < 7; runDirection++) {
+			if(look(runDirection, true) != null) {
+				run(runDirection);
+			}
+		}
+		
 		dir = Critter.getRandomInt(8);
 		numIsolation = 0;
 		return false;
