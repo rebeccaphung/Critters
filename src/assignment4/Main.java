@@ -23,9 +23,34 @@ import javafx.*;
  * input file is optional.  If input file is specified, the word 'test' is optional.
  * May not use 'test' argument without specifying input file.
  */
-public class Main {
+public class Main extends Application{
+	
+	static GridPane grid = new GridPane();
 
-    static Scanner kb;	// scanner connected to keyboard input, or input file
+	@Override
+	public void start(Stage primaryStage) {
+		try {			
+
+			grid.setGridLinesVisible(true);
+
+			Scene scene = new Scene(grid, 500, 500);
+			primaryStage.setScene(scene);
+			
+			primaryStage.show();
+			
+			// Paints the icons.
+			Painter.paint();
+			
+		} catch(Exception e) {
+			e.printStackTrace();		
+		}
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+
+/*    static Scanner kb;	// scanner connected to keyboard input, or input file
     private static String inputFile;	// input file, used instead of keyboard input if specified
     static ByteArrayOutputStream testOutputString;	// if test specified, holds all console output
     private static String myPackage;	// package of Critter file.  Critter cannot be in default pkg.
@@ -38,10 +63,11 @@ public class Main {
         myPackage = Critter.class.getPackage().toString().split(" ")[1];
     }
 
-    /**
+    *//**
      * Main method.
      * @param args args can be empty.  If not empty, provide two parameters -- the first is a file name,
      * and the second is test (for test output, where all output to be directed to a String), or nothing.
+
      * @throws InvalidCritterException
      */
     public static void main(String[] args) throws InvalidCritterException {
@@ -69,6 +95,7 @@ public class Main {
         } else { // if no arguments to main
             kb = new Scanner(System.in); // use keyboard and console
         }
+
 
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
@@ -177,7 +204,10 @@ public class Main {
         drawShapes(gc);
 
 
+
+
     /**
+
      * Controller component
      * Takes in the input and commences the appropriate functions in regards to the command keywords
      * "step" goes through one time step
@@ -189,9 +219,11 @@ public class Main {
      * "stats <Critter>" calls the runStats function of that particular <Critter> class
      * "quit" ends the program
      * @param kb
+
      */
 
 /*
+
     public static void controller(Scanner kb) {
     	System.out.print("critters>");
         String line = kb.nextLine();
@@ -294,8 +326,10 @@ public class Main {
             input = line.split("\\s+");
         }
 
+
     }
     */
     System.out.flush();
+
 
 }

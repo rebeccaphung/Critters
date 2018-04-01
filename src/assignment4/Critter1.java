@@ -22,6 +22,8 @@
 
 package assignment4;
 
+import assignment4.Critter.CritterShape;
+
 public class Critter1 extends Critter{
 	private int dir;
 	private int algaeCount;
@@ -30,8 +32,8 @@ public class Critter1 extends Critter{
 	private int timeCount;
 	
 	/**
-     * Critter 2 as a String
-     * @return string representation of Critter2
+     * Critter 1 as a String
+     * @return string representation of Critter1
      */
 	@Override
 	public String toString() { return "1"; }
@@ -93,7 +95,8 @@ public class Critter1 extends Critter{
 	 * Critter1 runStat
 	 * Reports the amount of algae consumed and critters evaded for every instance of Critter1 in population
 	 */
-	public static void runStats(java.util.List<Critter> whales) {
+	public static String runStats(java.util.List<Critter> whales) {
+		String stats = "";
 		int aCount;
 		int eCount;
 		int indexNum;
@@ -101,7 +104,15 @@ public class Critter1 extends Critter{
 			indexNum = whales.indexOf(w);
 			aCount = ((Critter1) w).algaeCount;
 			eCount = ((Critter1) w).evaded;
-			System.out.println("Critter1 - Index: " + indexNum + "\t" + "Algae consumed: " + aCount + "\t" + "Critters evaded: " + eCount);
+			stats += "Critter1 - Index: " + indexNum + "\t" + "Algae consumed: " + aCount + "\t" + "Critters evaded: " + eCount + "\n";
 		}
+		
+		return stats;
 	}
+	
+	@Override
+	public CritterShape viewShape() { return CritterShape.SQUARE; }
+
+	@Override
+	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.BLUE; }
 }
