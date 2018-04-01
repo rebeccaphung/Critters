@@ -17,6 +17,8 @@
 
 package assignment4;
 
+import assignment4.Critter.CritterShape;
+
 public class Critter4 extends Critter {
     private int dir;
     private String weakness;
@@ -99,7 +101,8 @@ public class Critter4 extends Critter {
      * prints out total number of Critter4 and how many Critter4 are weak against each type of Critter
      * @return does not return
      */
-    public static void runStats(java.util.List<Critter> critters) {
+    public static String runStats(java.util.List<Critter> critters) {
+    	String stats = "";
 		int totalWeakAgainstAlgae = 0;
 		int totalWeakAgainstCraig = 0;
 		int totalWeakAgainst1 = 0;
@@ -130,13 +133,20 @@ public class Critter4 extends Critter {
             }
 		}
 
-		System.out.print("" + critters.size() + " total Critter4s    ");
-		System.out.print("" + totalWeakAgainstAlgae + " total weak against Algae    ");
-        System.out.print("" + totalWeakAgainstCraig + " total weak against Craig    ");
-        System.out.print("" + totalWeakAgainst1 + " total weak against Critter1    ");
-        System.out.print("" + totalWeakAgainst2 + " total weak against Critter2    ");
-        System.out.print("" + totalWeakAgainst3 + " total weak against Critter3    ");
-        System.out.print("" + totalWeakAgainst4 + " total weak against Critter4    ");
-		System.out.println();
+		stats += "" + critters.size() + " total Critter4s    ";
+		stats += "" + totalWeakAgainstAlgae + " total weak against Algae    ";
+        stats += "" + totalWeakAgainstCraig + " total weak against Craig    ";
+        stats += "" + totalWeakAgainst1 + " total weak against Critter1    ";
+        stats += "" + totalWeakAgainst2 + " total weak against Critter2    ";
+        stats += "" + totalWeakAgainst3 + " total weak against Critter3    ";
+        stats += "" + totalWeakAgainst4 + " total weak against Critter4    \n";
+        
+        return stats;
 	}
+    
+	@Override
+	public CritterShape viewShape() { return CritterShape.SQUARE; }
+
+	@Override
+	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.BLUE; }
 }

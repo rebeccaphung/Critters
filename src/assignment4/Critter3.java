@@ -17,6 +17,8 @@
 
 package assignment4;
 
+import assignment4.Critter.CritterShape;
+
 public class Critter3 extends Critter {
     private int dir;
     private int fightsAvoided;
@@ -75,14 +77,21 @@ public class Critter3 extends Critter {
      * prints out total number of Critter3 and how many fights have been avoided
      * @return does not return
      */
-    public static void runStats(java.util.List<Critter> critters) {
+    public static String runStats(java.util.List<Critter> critters) {
+    	String stats = "";
         int totalFightsAvoided = 0;
 		for (Object obj : critters) {
 			Critter3 c = (Critter3) obj;
 			totalFightsAvoided += c.fightsAvoided;
 		}
-		System.out.print("" + critters.size() + " total Critter3s    ");
-		System.out.print("" + totalFightsAvoided + " total number of fights avoided");
-		System.out.println();
+		stats += "" + critters.size() + " total Critter3s    ";
+		stats += "" + totalFightsAvoided + " total number of fights avoided \n";
+		return stats;
 	}
+    
+	@Override
+	public CritterShape viewShape() { return CritterShape.SQUARE; }
+
+	@Override
+	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.BLUE; }
 }

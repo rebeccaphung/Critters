@@ -21,6 +21,8 @@
 
 package assignment4;
 
+import assignment4.Critter.CritterShape;
+
 public class Critter2 extends Critter{
 	private int dir;
 	private int numIsolation;
@@ -81,7 +83,8 @@ public class Critter2 extends Critter{
 	 * Critter2 runStats
 	 * Reports the current energy, energy gained, and time in isolation for each instance of Critter2 in population
 	 */
-	public static void runStats(java.util.List<Critter> hermit) {
+	public static String runStats(java.util.List<Critter> hermit) {
+		String stats = "";
 		int energy;
 		int eGained;
 		int isoNum;
@@ -92,8 +95,16 @@ public class Critter2 extends Critter{
 			eGained = ((Critter2) c).energyGained;
 			isoNum = ((Critter2) c).numIsolation;
 			
-			System.out.println("Critter2 - Index: " + indexNum + "\t" + "Energy: " + energy + "\t" + "Energy gained: " + eGained + "\t" + "Time in isolation: " + isoNum);
+			stats += "Critter2 - Index: " + indexNum + "\t" + "Energy: " + energy + "\t" + "Energy gained: " + eGained + "\t" + "Time in isolation: " + isoNum + "\n";
 		}
+		
+		return stats;
 	}
+	
+	@Override
+	public CritterShape viewShape() { return CritterShape.SQUARE; }
+
+	@Override
+	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.BLUE; }
 	
 }
