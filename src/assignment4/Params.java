@@ -20,5 +20,6 @@ public class Params {
 	public  static int refresh_algae_count = 10;
 	public static  int photosynthesis_energy_amount = 1;
 	public static  int start_energy = 100;
+	public static int look_energy_cost = 1;
 
 }
