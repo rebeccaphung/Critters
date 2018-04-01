@@ -61,7 +61,75 @@ public abstract class Critter {
 		myPackage = Critter.class.getPackage().toString().split(" ")[1];
 	}
 
-	protected final String look(int direction, boolean steps) {return "";}
+	protected final String look(int direction, boolean steps) {
+		int[] lookSpot = new int[2];
+		this.energy -= Params.look_energy_cost;
+		
+		if(steps) {
+			switch (direction){
+				case 0:
+					lookSpot = changeCoords(2, 0);
+					break;
+				case 1:
+					lookSpot = changeCoords(2, 2);
+					break;
+				case 2:
+					lookSpot = changeCoords(0, 2);
+					break;
+				case 3:
+					lookSpot = changeCoords(-2, 2);
+					break;
+				case 4:
+					lookSpot = changeCoords(-2, 0);
+					break;
+				case 5:
+					lookSpot = changeCoords(-2, -2);
+					break;
+				case 6:
+					lookSpot = changeCoords(0, -2);
+					break;
+				case 7:
+					lookSpot = changeCoords(2, -2);
+					break;
+			}
+		}else {
+			switch (direction){
+				case 0:
+					lookSpot = changeCoords(1, 0);
+					break;
+				case 1:
+					lookSpot = changeCoords(1, 1);
+					break;
+				case 2:
+					lookSpot = changeCoords(0, 1);
+					break;
+				case 3:
+					lookSpot = changeCoords(-1, 1);
+					break;
+				case 4:
+					lookSpot = changeCoords(-1, 0);
+					break;
+				case 5:
+					lookSpot = changeCoords(-1, -1);
+					break;
+				case 6:
+					lookSpot = changeCoords(0, -1);
+					break;
+				case 7:
+					lookSpot = changeCoords(1, -1);
+					break;
+			}	
+		}
+		
+		for(Critter c : population) {
+			if((c.x_coord == lookSpot[0]) && (c.y_coord == lookSpot[1])) {
+				return c.toString();
+			}
+		}
+		
+		return null;
+		
+		}
 	
 	private static java.util.Random rand = new java.util.Random();
 	/*
@@ -91,13 +159,8 @@ public abstract class Critter {
 
 	private static boolean movedFlag;
 
-	/** 
-	 * change location based on how much xChange and yChange
-	 * @param xChange how much Critter moves horizontally
-	 * @param yChange how much Critter moves vertically
-	 * @return does not return
-	 */
-	private final void changeLocation(int xChange, int yChange){
+	private final int[] changeCoords(int xChange, int yChange) {
+		int [] coords = new int[2];
 		int newX = x_coord + xChange;
 		if(newX > Params.world_width - 1){ //check if Critter moved off the sides of the world
 			newX = newX % Params.world_width;
@@ -113,20 +176,35 @@ public abstract class Critter {
 		else if(newY < 0){
 			newY += Params.world_height;
 		}
+		
+		coords[0] = newX;
+		coords[1] = newY;
+		return coords;
+	}
+	
+	/** 
+	 * change location based on how much xChange and yChange
+	 * @param xChange how much Critter moves horizontally
+	 * @param yChange how much Critter moves vertically
+	 * @return does not return
+	 */
+	private final void changeLocation(int xChange, int yChange){
+		int[] location = new int[2];
+		location = changeCoords(xChange, yChange);
 
 		if(encounteredFlag){ //if Critter tries to move during encounters, check if they already moved or if location is already occupied. If it is, don't move
 			if(movedFlag){
 				return;
 			}
 			for(Critter c : population){
-				if((c.x_coord == newX) && (c.y_coord == newY)){
+				if((c.x_coord == location[0]) && (c.y_coord == location[1])){
 					return;
 				}
 			}
 		}
 
-		x_coord = newX;
-		y_coord = newY;
+		x_coord = location[0];
+		y_coord = location[1];
 		movedFlag = true;
 	}
 
