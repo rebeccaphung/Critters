@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.io.*;
+import javafx.*;
 
 
 /*
@@ -41,7 +42,7 @@ public class Main {
      * Main method.
      * @param args args can be empty.  If not empty, provide two parameters -- the first is a file name,
      * and the second is test (for test output, where all output to be directed to a String), or nothing.
-     * @throws InvalidCritterException 
+     * @throws InvalidCritterException
      */
     public static void main(String[] args) throws InvalidCritterException {
         if (args.length != 0) {
@@ -71,11 +72,111 @@ public class Main {
 
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
-
-        controller(kb);
-
+        launch(args);
     }
-    
+
+    @Override
+    public void start(Stage primaryStage){
+
+        primaryStage.setTitle("Critters");
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setVgap(5);
+        grid.setHgap(5);
+
+        Button quitBtn = new Button("Quit");
+        GridPane.setConstraints(quitBtn, 0, 0);
+        grid.getChildren().add(quitBtn);
+        quitBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                System.exit();
+            }
+        });
+
+        Button makeBtn = new Button("Make");
+        GridPane.setConstraints(makeBtn, 0, 1);
+        grid.getChildren().add(makeBtn);
+        TextField makeField = new TextField ();
+        makeField.setPromptText("Enter amount you want to make.");
+        GridPane.setConstraints(makeField, 1, 1);
+        grid.getChildren().add(makeField);
+        int makeValue = 0;
+        makeBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                try{
+                    makeValue = Interger.parseInt(makeField.getText);
+                    //add make functionality
+                }
+                catch(Exception c){
+                    makeField.setPromptText("That was not a valid number. Enter amount you want to make.");
+                }
+            }
+        });
+
+        Button stepBtn = new Button("Step");
+        GridPane.setConstraints(stepBtn, 0, 2);
+        grid.getChildren().add(stepBtn);
+        TextField stepField = new TextField ();
+        stepField.setPromptText("Enter amount you want to step.");
+        GridPane.setConstraints(stepField, 1, 2);
+        grid.getChildren().add(stepField);
+        Button stopBtn = new Button("Stop");
+        GridPane.setConstraints(stopBtn, 3, 2);
+        grid.getChildren().add(stopBtn);
+        int stepValue = 0;
+        stepBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                try{
+                    stepValue = Interger.parseInt(stepField.getText);
+                    //add step functionality
+                }
+                catch(Exception c){
+                    stepField.setPromptText("That was not a valid number. Enter amount you want to step.");
+                }
+            }
+        });
+        stopBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                    //add stop functionality
+
+            }
+        });
+
+        Button seedBtn = new Button("Seed");
+        GridPane.setConstraints(seedBtn, 0, 3);
+        grid.getChildren().add(seedBtn);
+        TextField seedField = new TextField ();
+        seedField.setPromptText("Enter seed value.");
+        GridPane.setConstraints(seedField, 1, 3);
+        grid.getChildren().add(seedField);
+        int seedValue = 0;
+        seedBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                try{
+                    seedValue = Interger.parseInt(seedField.getText);
+                    //add seed functionality
+                }
+                catch(Exception c){
+                    seedField.setPromptText("That was not a valid number. Enter seed value.");
+                }
+            }
+        });
+
+        Button statsBtn = new Button("Run Stats");
+        GridPane.setConstraints(statsBtn, 1, 3);
+        grid.getChildren().add(statsBtn);
+
+        Canvas canvas = new Canvas(300, 250);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        drawShapes(gc);
+
+
     /**
      * Controller component
      * Takes in the input and commences the appropriate functions in regards to the command keywords
@@ -89,6 +190,8 @@ public class Main {
      * "quit" ends the program
      * @param kb
      */
+
+/*
     public static void controller(Scanner kb) {
     	System.out.print("critters>");
         String line = kb.nextLine();
@@ -97,7 +200,7 @@ public class Main {
 
         while(!input[0].equals("quit")){
         	if(input.length == 1) {
-        		
+
         		switch(input[0]){
         			case "show":
         				Critter.displayWorld();
@@ -108,10 +211,10 @@ public class Main {
         			default:
                     	System.out.println("error processing: " + line);
                     	break;
-        		}           	
+        		}
         	}
         	else if(input.length == 2) {
-        		
+
         		switch(input[0]){
         			case "step":
 						try {
@@ -143,7 +246,7 @@ public class Main {
     	                    critters = Critter.getInstances(input[1]);
     	                    java.lang.reflect.Method method;
     		                    try {
-    			                    Class<?> c = Class.forName(myPackage + "." + input[1]); 
+    			                    Class<?> c = Class.forName(myPackage + "." + input[1]);
     			                    method = c.getMethod("runStats", List.class);
     			                    if(critters.isEmpty()) {
     			                    	method.invoke(c, critters);
@@ -185,14 +288,14 @@ public class Main {
         	else {
         		System.out.println("error processing: " + line);
         	}
-       		
+
             System.out.print("critters>");
             line = kb.nextLine();
             input = line.split("\\s+");
         }
 
-        /* Write your code above */
-        System.out.flush();
-
     }
+    */
+    System.out.flush();
+
 }
