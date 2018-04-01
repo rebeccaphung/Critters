@@ -140,13 +140,14 @@ public class Critter4 extends Critter {
         stats += "" + totalWeakAgainst2 + " total weak against Critter2    ";
         stats += "" + totalWeakAgainst3 + " total weak against Critter3    ";
         stats += "" + totalWeakAgainst4 + " total weak against Critter4    \n";
-        
+
         return stats;
 	}
-    
-	@Override
-	public CritterShape viewShape() { return CritterShape.SQUARE; }
 
 	@Override
-	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.BLUE; }
+	public CritterShape viewShape() { return CritterShape.TRIANGLE; }
+	@Override
+	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.PEACHPUFF; }
+    @Override
+	public javafx.scene.paint.Color viewFillColor() { return javafx.scene.paint.Color.PALEVIOLETRED; }
 }
