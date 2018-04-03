@@ -145,7 +145,7 @@ public class Critter4 extends Critter {
 	}
 
 	@Override
-	public CritterShape viewShape() { return CritterShape.TRIANGLE; }
+	public CritterShape viewShape() { return CritterShape.STAR; }
 	@Override
 	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.PEACHPUFF; }
     @Override
