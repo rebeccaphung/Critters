@@ -57,10 +57,10 @@ public class Critter3 extends Critter {
 	public void doTimeStep() {
 
         int movement = Critter.getRandomInt(3); //randomly stays, walks, or runs
-        if(movement == 0 && look(dir, 1) == NULL){
+        if(movement == 0 && look(dir, false) == null){
             walk(dir);
         }
-        else if(movement == 1 && look(dir, 2) == NULL){
+        else if(movement == 1 && look(dir, true) == null){
             run(dir);
         }
 

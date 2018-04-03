@@ -18,11 +18,14 @@ import java.io.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
 
 
@@ -93,15 +96,17 @@ public class Main extends Application{
         GridPane grid = new GridPane();
 
         Button quitBtn = new Button("Quit");
-        GridPane.setConstraints(quitBtn, 0, 0);
+        GridPane.setConstraints(quitBtn, 1, 0);
         grid.getChildren().add(quitBtn);
         quitBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                System.exit(0);
+            	System.exit(0);
+                //add stop functionality
+
             }
         });
-
+         
         Button makeBtn = new Button("Make");
         GridPane.setConstraints(makeBtn, 0, 1);
         grid.getChildren().add(makeBtn);
@@ -109,12 +114,12 @@ public class Main extends Application{
         makeField.setPromptText("Enter amount you want to make.");
         GridPane.setConstraints(makeField, 1, 1);
         grid.getChildren().add(makeField);
-        int makeValue = 0;
         makeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 try{
-                    makeValue = Integer.parseInt(makeField.getText());
+                    int makeValue = Integer.parseInt(makeField.getText());
+                    System.out.println("test");
                     //add make functionality
                 }
                 catch(Exception c){
@@ -130,15 +135,11 @@ public class Main extends Application{
         stepField.setPromptText("Enter amount you want to step.");
         GridPane.setConstraints(stepField, 1, 2);
         grid.getChildren().add(stepField);
-        Button stopBtn = new Button("Stop");
-        GridPane.setConstraints(stopBtn, 3, 2);
-        grid.getChildren().add(stopBtn);
-        int stepValue = 0;
         stepBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 try{
-                    stepValue = Integer.parseInt(stepField.getText());
+                    int stepValue = Integer.parseInt(stepField.getText());
                     //add step functionality
                 }
                 catch(Exception c){
@@ -146,10 +147,15 @@ public class Main extends Application{
                 }
             }
         });
+        
+        Button stopBtn = new Button("Stop");
+        GridPane.setConstraints(stopBtn, 3, 2);
+        grid.getChildren().add(stopBtn);
         stopBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                    //add stop functionality
+            	System.out.println("test");
+                //add stop functionality
 
             }
         });
@@ -161,12 +167,11 @@ public class Main extends Application{
         seedField.setPromptText("Enter seed value.");
         GridPane.setConstraints(seedField, 1, 3);
         grid.getChildren().add(seedField);
-        int seedValue = 0;
         seedBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 try{
-                    seedValue = Integer.parseInt(seedField.getText());
+                    int seedValue = Integer.parseInt(seedField.getText());
                     //add seed functionality
                 }
                 catch(Exception c){
@@ -176,7 +181,7 @@ public class Main extends Application{
         });
 
         Button statsBtn = new Button("Run Stats");
-        GridPane.setConstraints(statsBtn, 1, 3);
+        GridPane.setConstraints(statsBtn, 0, 4);
         grid.getChildren().add(statsBtn);
 
         Canvas canvas = new Canvas(300, 250);
@@ -323,26 +328,6 @@ public class Main extends Application{
 
     }
     private void drawShapes(GraphicsContext gc) {
-        gc.setFill(Color.GREEN);
-        gc.setStroke(Color.BLUE);
-        gc.setLineWidth(5);
-        gc.strokeLine(40, 10, 10, 40);
-        gc.fillOval(10, 60, 30, 30);
-        gc.strokeOval(60, 60, 30, 30);
-        gc.fillRoundRect(110, 60, 30, 30, 10, 10);
-        gc.strokeRoundRect(160, 60, 30, 30, 10, 10);
-        gc.fillArc(10, 110, 30, 30, 45, 240, ArcType.OPEN);
-        gc.fillArc(60, 110, 30, 30, 45, 240, ArcType.CHORD);
-        gc.fillArc(110, 110, 30, 30, 45, 240, ArcType.ROUND);
-        gc.strokeArc(10, 160, 30, 30, 45, 240, ArcType.OPEN);
-        gc.strokeArc(60, 160, 30, 30, 45, 240, ArcType.CHORD);
-        gc.strokeArc(110, 160, 30, 30, 45, 240, ArcType.ROUND);
-        gc.fillPolygon(new double[]{10, 40, 10, 40},
-                       new double[]{210, 210, 240, 240}, 4);
-        gc.strokePolygon(new double[]{60, 90, 60, 90},
-                         new double[]{210, 210, 240, 240}, 4);
-        gc.strokePolyline(new double[]{110, 140, 110, 140},
-                          new double[]{210, 210, 240, 240}, 4);
     }
 
 }
