@@ -89,6 +89,7 @@ public class Main extends Application{
         launch(args);
     }
 
+
     @Override
     public void start(Stage primaryStage) {
 
@@ -106,7 +107,7 @@ public class Main extends Application{
 
             }
         });
-         
+
         Button makeBtn = new Button("Make");
         GridPane.setConstraints(makeBtn, 0, 1);
         grid.getChildren().add(makeBtn);
@@ -147,7 +148,7 @@ public class Main extends Application{
                 }
             }
         });
-        
+
         Button stopBtn = new Button("Stop");
         GridPane.setConstraints(stopBtn, 3, 2);
         grid.getChildren().add(stopBtn);
@@ -190,6 +191,17 @@ public class Main extends Application{
 
         drawShapes(gc);
 
+		GridPane displayGrid = new GridPane();
+		for (int column = 0; column < Param.world_width; column++) {
+            for (int row = 0 ; row < Param.world_height; row++) {
+                Canvas canvas = new Canvas(25,25);
+				GraphicsContext gc = canvas.getGraphicsContext2D();
+				gc.setFill(Color.GREEN);
+		        gc.fillCircle(10, 10, 5, 5);
+                GridPane.setConstraints(canvas, column, row);
+                box.getChildren().add(canvas);
+            }
+        }
 
 
         primaryStage.setScene(new Scene(grid));
