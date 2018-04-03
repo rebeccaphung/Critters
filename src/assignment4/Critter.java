@@ -35,27 +35,27 @@ public abstract class Critter {
 		DIAMOND,
 		STAR
 	}
-	
+
 	/* the default color is white, which I hope makes critters invisible by default
 	 * If you change the background color of your View component, then update the default
-	 * color to be the same as you background 
-	 * 
-	 * critters must override at least one of the following three methods, it is not 
+	 * color to be the same as you background
+	 *
+	 * critters must override at least one of the following three methods, it is not
 	 * proper for critters to remain invisible in the view
-	 * 
-	 * If a critter only overrides the outline color, then it will look like a non-filled 
-	 * shape, at least, that's the intent. You can edit these default methods however you 
-	 * need to, but please preserve that intent as you implement them. 
+	 *
+	 * If a critter only overrides the outline color, then it will look like a non-filled
+	 * shape, at least, that's the intent. You can edit these default methods however you
+	 * need to, but please preserve that intent as you implement them.
 	 */
-	public javafx.scene.paint.Color viewColor() { 
-		return javafx.scene.paint.Color.WHITE; 
+	public javafx.scene.paint.Color viewColor() {
+		return javafx.scene.paint.Color.WHITE;
 	}
-	
+
 	public javafx.scene.paint.Color viewOutlineColor() { return viewColor(); }
 	public javafx.scene.paint.Color viewFillColor() { return viewColor(); }
-	
-	public abstract CritterShape viewShape(); 
-	
+
+	public abstract CritterShape viewShape();
+
 	private static String myPackage;
 	private	static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
@@ -68,7 +68,7 @@ public abstract class Critter {
 	protected final String look(int direction, boolean steps) {
 		int[] lookSpot = new int[2];
 		this.energy -= Params.look_energy_cost;
-		
+
 		if(steps) {
 			switch (direction){
 				case 0:
@@ -122,19 +122,19 @@ public abstract class Critter {
 				case 7:
 					lookSpot = changeCoords(1, -1);
 					break;
-			}	
+			}
 		}
-		
+
 		for(Critter c : population) {
 			if((c.x_coord == lookSpot[0]) && (c.y_coord == lookSpot[1])) {
 				return c.toString();
 			}
 		}
-		
+
 		return null;
-		
+
 		}
-	
+
 	private static java.util.Random rand = new java.util.Random();
 	/*
 	 * Random int Generator
@@ -180,13 +180,13 @@ public abstract class Critter {
 		else if(newY < 0){
 			newY += Params.world_height;
 		}
-		
+
 		coords[0] = newX;
 		coords[1] = newY;
 		return coords;
 	}
-	
-	/** 
+
+	/**
 	 * change location based on how much xChange and yChange
 	 * @param xChange how much Critter moves horizontally
 	 * @param yChange how much Critter moves vertically
@@ -212,7 +212,7 @@ public abstract class Critter {
 		movedFlag = true;
 	}
 
-	/** 
+	/**
 	 * move Critter 1 space
 	 * @param direction direction Critter moves in
 	 * @return does not return
@@ -381,7 +381,7 @@ public abstract class Critter {
 			stats += prefix + s + ":" + critter_count.get(s);
 			prefix = ", ";
 		}
-		
+
 		return stats;
 }
 
@@ -448,7 +448,7 @@ public abstract class Critter {
 
 	private static int timestep; //number of TimeSteps
 
-	/** 
+	/**
 	 * does each Critter's time step and does encounters
 	 * @return does not return
 	 */
@@ -461,7 +461,7 @@ public abstract class Critter {
 		transitionBabies();
 	}
 
-	/** 
+	/**
 	 * does each Critter's timestep
 	 * @return does not return
 	 */
@@ -473,7 +473,7 @@ public abstract class Critter {
 
 	private static boolean encounteredFlag;
 
-	/** 
+	/**
 	 * does encounters for any Critters in the same location
 	 * @return does not return
 	 */
@@ -521,7 +521,7 @@ public abstract class Critter {
 		encounteredFlag = false;
 		movedFlag = false;
 	}
-	
+
 	/**
 	 * Subtracts the rest energy cost in the params class each critter instance in the population list
 	 * removes the critter instances are at 0 or less energy
@@ -551,7 +551,7 @@ public abstract class Critter {
 			}
 		}
 	}
-	
+
 	/**
 	 * Moves the critter instances in the babies list to the population list
 	 * Clears the baby list after the transition
@@ -560,7 +560,7 @@ public abstract class Critter {
 		population.addAll(babies);
 		babies.clear();
 	}
-	
+
 	/**
 	 * View component
 	 * Creates a border and an area defined by the world width and world height constants from the params class
@@ -603,17 +603,50 @@ public abstract class Critter {
 			System.out.println();
 		}
 	}*/
-	
+
 	public static void displayWorld(GridPane grid) {
 		for(Critter c: population) {
-			Canvas canvas = new Canvas(25,25);
+			Canvas canvas = new Canvas(24,24);
 			GraphicsContext gc = canvas.getGraphicsContext2D();
 			gc.setStroke(Color.BLACK);
-	        gc.strokeRect(0, 0, 25, 25);
+	        gc.strokeRect(0, 0, 24, 24);
+
+			gc.setStroke(Color.c.viewOutlineColor);
+			gc.setFill(Color.c.viewFillColor);
+
+			if(c.viewShape == CritterShape.CIRCLE){
+				gc.fillOval(6, 6, 12, 12);
+				gc.strokeOval(6, 6, 12, 12);
+			}
+			else{
+				double[] x, y;
+				int numPoints = chooseShape(c.viewShape, x, y);
+				gc.fillPolygon(x, y, numPoints);
+			}
+
             GridPane.setConstraints(canvas, c.x_coord, c.y_coord);
-            gc.setFill(Color.GREEN);
-	        gc.fillRect(0, 0, 10, 10);
             grid.getChildren().add(canvas);
+		}
+	}
+
+	private int chooseShape(CritterShape shape, double[] x, double[] y){
+		switch(shape){
+			case SQUARE:
+				x = {6.0, 6.0, 18.0, 18.0};
+				y = {6.0, 18.0, 18.0, 6.0};
+				return 4;
+			case TRIANGLE:
+				x = {12.0, 18.0, 6.0};
+				y = {6.0, 18.0, 18.0};
+				return 3;
+			case DIAMOND:
+				x = {12.0, 18.0, 12.0, 6.0};
+				y = {6.0, 12.0, 18.0, 12.0};
+				return 4;
+			case STAR:
+				x = {12.0, 8.0, 18.0, 6.0, 18.0};
+				y = {6.0, 18.0, 9.0, 9.0, 16.0};
+				return 5;
 		}
 	}
 }

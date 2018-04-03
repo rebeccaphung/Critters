@@ -174,7 +174,7 @@ public class Main extends Application{
             public void handle(ActionEvent e) {
                 try{
                     int seedValue = Integer.parseInt(seedField.getText());
-                    //add seed functionality
+                    Critter.seed(seedValue);
                 }
                 catch(Exception c){
                     seedField.setPromptText("That was not a valid number. Enter seed value.");
@@ -185,7 +185,7 @@ public class Main extends Application{
         Button statsBtn = new Button("Run Stats");
         GridPane.setConstraints(statsBtn, 0, 4);
         grid.getChildren().add(statsBtn);
-        
+
 		for (int column = 0; column < Params.world_width; column++) {
             for (int row = 0 ; row < Params.world_height; row++) {
                 Canvas canvas = new Canvas(25,25);
@@ -199,13 +199,13 @@ public class Main extends Application{
 
 		GridPane.setConstraints(displayGrid, 0, 0);
 		grid.getChildren().add(displayGrid);
-		
+
         primaryStage.setScene(new Scene(grid));
         primaryStage.show();
         System.out.flush();
     }
 
- 
+
     public void showMake(String critter, int num, GridPane displayGrid) {
     	for(int i = 0; i < num; i++) {
     		try {
@@ -214,12 +214,11 @@ public class Main extends Application{
         	catch(InvalidCritterException e){
         		System.out.println(e);
         	}
-    		
+
     	Critter.displayWorld(displayGrid);
     	}
-    	
-    	
     }
+
 
     /**
 
@@ -344,6 +343,6 @@ public class Main extends Application{
 
     }
     */
-  
+
 
 }
