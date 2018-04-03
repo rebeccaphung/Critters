@@ -12,6 +12,7 @@ package assignment4;
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import javafx.*;
@@ -608,19 +609,46 @@ public abstract class Critter {
 		for(Critter c: population) {
 			Canvas canvas = new Canvas(24,24);
 			GraphicsContext gc = canvas.getGraphicsContext2D();
-			gc.setStroke(Color.BLACK);
-	        gc.strokeRect(0, 0, 24, 24);
+			//gc.setStroke(Color.BLACK);
+	        //gc.strokeRect(0, 0, 24, 24);
 
-			gc.setStroke(Color.c.viewOutlineColor());
-			gc.setFill(Color.c.viewFillColor());
+			gc.setStroke(c.viewOutlineColor());
+			gc.setFill(c.viewFillColor());
 
 			if(c.viewShape() == CritterShape.CIRCLE){
 				gc.fillOval(6, 6, 12, 12);
 				gc.strokeOval(6, 6, 12, 12);
 			}
 			else{
-				double[] x, y;
-				int numPoints = chooseShape(c.viewShape(), x, y);
+				double[] x = new double[] {0.0};
+				double[] y = new double[] {0.0};
+				int numPoints = 0;
+				
+				switch(c.viewShape()){
+				case SQUARE:
+					x = Arrays.copyOf(new double[]{6.0, 6.0, 18.0, 18.0}, 4);
+					y = Arrays.copyOf(new double[]{6.0, 18.0, 18.0, 6.0}, 4);
+					numPoints = 4;
+					break;
+				case TRIANGLE:
+					x = Arrays.copyOf(new double[]{12.0, 18.0, 6.0}, 3);
+					y = Arrays.copyOf(new double[]{6.0, 18.0, 18.0}, 3);
+					numPoints = 3;
+					break;
+				case DIAMOND:
+					x = Arrays.copyOf(new double[]{12.0, 18.0, 12.0, 6.0}, 4);
+					y = Arrays.copyOf(new double[]{6.0, 12.0, 18.0, 12.0}, 4);
+					numPoints = 4;
+					break;
+				case STAR:
+					x = Arrays.copyOf(new double[]{12.0, 8.0, 18.0, 6.0, 18.0}, 5);
+					y = Arrays.copyOf(new double[]{6.0, 18.0, 9.0, 9.0, 16.0}, 5);
+					numPoints = 5;
+					break;
+				default:
+					numPoints = 0;
+					break;
+			}
 				gc.fillPolygon(x, y, numPoints);
 			}
 
@@ -629,32 +657,26 @@ public abstract class Critter {
 		}
 	}
 
-	private int chooseShape(CritterShape shape, double[] x, double[] y){
+	private static int chooseShape(CritterShape shape, double[] x, double[] y){
 		switch(shape){
 			case SQUARE:
-				double[] xSquare = {6.0, 6.0, 18.0, 18.0};
-				double[] ySquare = {6.0, 18.0, 18.0, 6.0};
-				x = xSquare;
-				y = ySquare;
+				x = Arrays.copyOf(new double[]{6.0, 6.0, 18.0, 18.0}, 4);
+				y = Arrays.copyOf(new double[]{6.0, 18.0, 18.0, 6.0}, 4);
 				return 4;
 			case TRIANGLE:
-				double[] xTriangle = {12.0, 18.0, 6.0};
-				double[] yTriange = {6.0, 18.0, 18.0};
-				x = xTriangle;
-				y = yTriange;
+				x = Arrays.copyOf(new double[]{12.0, 18.0, 6.0}, 3);
+				y = Arrays.copyOf(new double[]{6.0, 18.0, 18.0}, 3);
 				return 3;
 			case DIAMOND:
-				double[] xDiamond = {12.0, 18.0, 12.0, 6.0};
-				double[] yDiamond = {6.0, 12.0, 18.0, 12.0};
-				x = xDiamond;
-				y = yDiamond;
+				x = Arrays.copyOf(new double[]{12.0, 18.0, 12.0, 6.0}, 4);
+				y = Arrays.copyOf(new double[]{6.0, 12.0, 18.0, 12.0}, 4);
 				return 4;
 			case STAR:
-				double[] xStar = {12.0, 8.0, 18.0, 6.0, 18.0};
-				double[] yStar = {6.0, 18.0, 9.0, 9.0, 16.0};
-				x = xStar;
-				y = yStar;
+				x = Arrays.copyOf(new double[]{12.0, 8.0, 18.0, 6.0, 18.0}, 5);
+				y = Arrays.copyOf(new double[]{6.0, 18.0, 9.0, 9.0, 16.0}, 5);
 				return 5;
+			default:
+				return 0;
 		}
 	}
 }

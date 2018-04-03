@@ -12,9 +12,14 @@ package assignment4;
  */
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.io.*;
+import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -35,9 +41,7 @@ import javafx.stage.Stage;
  * May not use 'test' argument without specifying input file.
  */
 public class Main extends Application{
-
-	static GridPane grid = new GridPane();
-
+	
     static Scanner kb;	// scanner connected to keyboard input, or input file
     private static String inputFile;	// input file, used instead of keyboard input if specified
     static ByteArrayOutputStream testOutputString;	// if test specified, holds all console output
@@ -58,6 +62,45 @@ public class Main extends Application{
      * @throws InvalidCritterException
      */
     public static void main(String[] args) throws InvalidCritterException {
+    	
+    	
+    	Path currentRelativePath = Paths.get("");
+    	String s = currentRelativePath.toAbsolutePath().toString();
+    	HashSet<String> classList = new HashSet<String>();
+    	ArrayList<String> critterClass = new ArrayList<String>();
+    	File general = new File(s);
+    	listFilesForFolder(general, classList);
+    	
+    	for(String f : classList) {
+    		try {
+				Class<?> c = Class.forName(myPackage + "." + f.substring(0, f.lastIndexOf(".")));
+				try {
+					Class<?> cC = Class.forName(myPackage + "." + "Critter");
+					if(cC.isAssignableFrom(c)) {
+						critterClass.add(c.getName());
+					}
+					
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					System.out.println("bad1");
+				}
+			} catch (Exception | java.lang.NoClassDefFoundError e) {
+				// TODO Auto-generated catch block
+				System.out.println("bad2");
+			}
+    	}
+    	
+    	for(String f : classList) {
+    		//System.out.println(f);
+    	}
+    	
+    	for(String f : critterClass) {
+    		System.out.println(f);
+    	}
+    	
+    	
+    	
+    	
         if (args.length != 0) {
             try {
                 inputFile = args[0];
@@ -110,19 +153,23 @@ public class Main extends Application{
         });
 
         Button makeBtn = new Button("Make");
-        GridPane.setConstraints(makeBtn, 0, 1);
-        grid.getChildren().add(makeBtn);
         TextField makeField = new TextField ();
-        makeField.setPromptText("Enter amount you want to make.");
+        final ComboBox makeMenu = new ComboBox();
+        
+        
+        GridPane.setConstraints(makeBtn, 0, 1);
         GridPane.setConstraints(makeField, 1, 1);
+        makeField.setPromptText("Enter amount");
+        grid.getChildren().add(makeBtn);
         grid.getChildren().add(makeField);
+        
         makeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 try{
                     int makeValue = Integer.parseInt(makeField.getText());
                     System.out.println("test");
-                    showMake("Craig", makeValue, displayGrid);
+                    showMake("Critter3", makeValue, displayGrid);
                 }
                 catch(Exception c){
                     makeField.setPromptText("That was not a valid number. Enter amount you want to make.");
@@ -141,8 +188,10 @@ public class Main extends Application{
             @Override
             public void handle(ActionEvent e) {
                 try{
-                    int stepValue = Integer.parseInt(stepField.getText());
-                    //add step functionality
+                    //int stepValue = Integer.parseInt(stepField.getText());
+                    int makeValue = Integer.parseInt(makeField.getText());
+                    //System.out.println("test");
+                    showMake("Critter4", makeValue, displayGrid);
                 }
                 catch(Exception c){
                     stepField.setPromptText("That was not a valid number. Enter amount you want to step.");
@@ -174,7 +223,7 @@ public class Main extends Application{
             public void handle(ActionEvent e) {
                 try{
                     int seedValue = Integer.parseInt(seedField.getText());
-                    Critter.seed(seedValue);
+                    //add seed functionality
                 }
                 catch(Exception c){
                     seedField.setPromptText("That was not a valid number. Enter seed value.");
@@ -185,13 +234,13 @@ public class Main extends Application{
         Button statsBtn = new Button("Run Stats");
         GridPane.setConstraints(statsBtn, 0, 4);
         grid.getChildren().add(statsBtn);
-
+        
 		for (int column = 0; column < Params.world_width; column++) {
             for (int row = 0 ; row < Params.world_height; row++) {
-                Canvas canvas = new Canvas(25,25);
+                Canvas canvas = new Canvas(24,24);
 				GraphicsContext gc = canvas.getGraphicsContext2D();
 				gc.setStroke(Color.BLACK);
-		        gc.strokeRect(0, 0, 25, 25);
+		        gc.strokeRect(0, 0, 24, 24);
                 GridPane.setConstraints(canvas, column, row);
                 displayGrid.getChildren().add(canvas);
             }
@@ -199,13 +248,13 @@ public class Main extends Application{
 
 		GridPane.setConstraints(displayGrid, 0, 0);
 		grid.getChildren().add(displayGrid);
-
+		
         primaryStage.setScene(new Scene(grid));
         primaryStage.show();
         System.out.flush();
     }
 
-
+ 
     public void showMake(String critter, int num, GridPane displayGrid) {
     	for(int i = 0; i < num; i++) {
     		try {
@@ -214,12 +263,25 @@ public class Main extends Application{
         	catch(InvalidCritterException e){
         		System.out.println(e);
         	}
-
+    		
     	Critter.displayWorld(displayGrid);
     	}
+    	
+    	
     }
 
-
+    
+    public static void listFilesForFolder(final File folder, HashSet<String> classList) {
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                listFilesForFolder(fileEntry, classList);
+            } else {
+            	if(fileEntry.getName().contains(".class") && !fileEntry.getName().equals(".classpath")) {
+            		classList.add(fileEntry.getName());
+            	}
+            }
+        }
+    }
     /**
 
      * Controller component
@@ -343,6 +405,6 @@ public class Main extends Application{
 
     }
     */
-
+  
 
 }
