@@ -41,7 +41,7 @@ import javafx.stage.Stage;
  * May not use 'test' argument without specifying input file.
  */
 public class Main extends Application{
-	
+
     static Scanner kb;	// scanner connected to keyboard input, or input file
     private static String inputFile;	// input file, used instead of keyboard input if specified
     static ByteArrayOutputStream testOutputString;	// if test specified, holds all console output
@@ -62,15 +62,15 @@ public class Main extends Application{
      * @throws InvalidCritterException
      */
     public static void main(String[] args) throws InvalidCritterException {
-    	
-    	
+
+
     	Path currentRelativePath = Paths.get("");
     	String s = currentRelativePath.toAbsolutePath().toString();
     	HashSet<String> classList = new HashSet<String>();
     	ArrayList<String> critterClass = new ArrayList<String>();
     	File general = new File(s);
     	listFilesForFolder(general, classList);
-    	
+
     	for(String f : classList) {
     		try {
 				Class<?> c = Class.forName(myPackage + "." + f.substring(0, f.lastIndexOf(".")));
@@ -79,7 +79,7 @@ public class Main extends Application{
 					if(cC.isAssignableFrom(c)) {
 						critterClass.add(c.getName());
 					}
-					
+
 				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					System.out.println("bad1");
@@ -89,18 +89,18 @@ public class Main extends Application{
 				System.out.println("bad2");
 			}
     	}
-    	
+
     	for(String f : classList) {
     		//System.out.println(f);
     	}
-    	
+
     	for(String f : critterClass) {
     		System.out.println(f);
     	}
-    	
-    	
-    	
-    	
+
+
+
+
         if (args.length != 0) {
             try {
                 inputFile = args[0];
@@ -135,14 +135,20 @@ public class Main extends Application{
 
     @Override
     public void start(Stage primaryStage) {
-    	GridPane displayGrid = new GridPane();
+
 
         primaryStage.setTitle("Critters");
         GridPane grid = new GridPane();
 
+		GridPane displayGrid = new GridPane();
+		GridPane controllerGrid = new GridPane();
+
+		JTextPane textPane = new JTextPane();
+
+
         Button quitBtn = new Button("Quit");
-        GridPane.setConstraints(quitBtn, 1, 0);
-        grid.getChildren().add(quitBtn);
+        GridPane.setConstraints(quitBtn, 0, 4);
+        controllerGrid.getChildren().add(quitBtn);
         quitBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -155,14 +161,14 @@ public class Main extends Application{
         Button makeBtn = new Button("Make");
         TextField makeField = new TextField ();
         final ComboBox makeMenu = new ComboBox();
-        
-        
-        GridPane.setConstraints(makeBtn, 0, 1);
-        GridPane.setConstraints(makeField, 1, 1);
+
+
+        GridPane.setConstraints(makeBtn, 0, 0);
+        GridPane.setConstraints(makeField, 2, 0);
         makeField.setPromptText("Enter amount");
-        grid.getChildren().add(makeBtn);
-        grid.getChildren().add(makeField);
-        
+        controllerGrid.getChildren().add(makeBtn);
+        controllerGrid.getChildren().add(makeField);
+
         makeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -178,20 +184,20 @@ public class Main extends Application{
         });
 
         Button stepBtn = new Button("Step");
-        GridPane.setConstraints(stepBtn, 0, 2);
-        grid.getChildren().add(stepBtn);
+        GridPane.setConstraints(stepBtn, 0, 1);
+        controllerGrid.getChildren().add(stepBtn);
         TextField stepField = new TextField ();
         stepField.setPromptText("Enter amount you want to step.");
-        GridPane.setConstraints(stepField, 1, 2);
-        grid.getChildren().add(stepField);
+        GridPane.setConstraints(stepField, 1, 1);
+        controllerGrid.getChildren().add(stepField);
         stepBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 try{
-                    //int stepValue = Integer.parseInt(stepField.getText());
-                    int makeValue = Integer.parseInt(makeField.getText());
-                    //System.out.println("test");
-                    showMake("Critter4", makeValue, displayGrid);
+                    int stepValue = Integer.parseInt(stepField.getText());
+					for(int i = 0; i < stepValue; i++){
+						worldTimeStep();
+					}
                 }
                 catch(Exception c){
                     stepField.setPromptText("That was not a valid number. Enter amount you want to step.");
@@ -200,8 +206,8 @@ public class Main extends Application{
         });
 
         Button stopBtn = new Button("Stop");
-        GridPane.setConstraints(stopBtn, 3, 2);
-        grid.getChildren().add(stopBtn);
+        GridPane.setConstraints(stopBtn, 4, 1);
+        controllerGrid.getChildren().add(stopBtn);
         stopBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -212,18 +218,18 @@ public class Main extends Application{
         });
 
         Button seedBtn = new Button("Seed");
-        GridPane.setConstraints(seedBtn, 0, 3);
-        grid.getChildren().add(seedBtn);
+        GridPane.setConstraints(seedBtn, 0, 2);
+        controllerGrid.getChildren().add(seedBtn);
         TextField seedField = new TextField ();
         seedField.setPromptText("Enter seed value.");
-        GridPane.setConstraints(seedField, 1, 3);
-        grid.getChildren().add(seedField);
+        GridPane.setConstraints(seedField, 1, 2);
+        controllerGrid.getChildren().add(seedField);
         seedBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 try{
                     int seedValue = Integer.parseInt(seedField.getText());
-                    //add seed functionality
+                    Critter.seed(seedValue);
                 }
                 catch(Exception c){
                     seedField.setPromptText("That was not a valid number. Enter seed value.");
@@ -232,9 +238,17 @@ public class Main extends Application{
         });
 
         Button statsBtn = new Button("Run Stats");
-        GridPane.setConstraints(statsBtn, 0, 4);
-        grid.getChildren().add(statsBtn);
-        
+        GridPane.setConstraints(statsBtn, 0, 3);
+        controllerGrid.getChildren().add(statsBtn);
+		statsBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                //add runStats functionality
+				String runStatsString = "";
+				textPane.replaceSelection(runStatsString);
+            }
+        });
+
 		for (int column = 0; column < Params.world_width; column++) {
             for (int row = 0 ; row < Params.world_height; row++) {
                 Canvas canvas = new Canvas(24,24);
@@ -246,15 +260,21 @@ public class Main extends Application{
             }
         }
 
-		GridPane.setConstraints(displayGrid, 0, 0);
+		GridPane.setConstraints(displayGrid, 0, 1);
 		grid.getChildren().add(displayGrid);
-		
+
+		GridPane.setConstraints(controllerGrid, 0, 0);
+		grid.getChildren().add(controllerGrid);
+
+		GridPane.setConstraints(textPane, 0, 2);
+		grid.getChildren().add(textPane);
+
         primaryStage.setScene(new Scene(grid));
         primaryStage.show();
         System.out.flush();
     }
 
- 
+
     public void showMake(String critter, int num, GridPane displayGrid) {
     	for(int i = 0; i < num; i++) {
     		try {
@@ -263,14 +283,14 @@ public class Main extends Application{
         	catch(InvalidCritterException e){
         		System.out.println(e);
         	}
-    		
+
     	Critter.displayWorld(displayGrid);
     	}
-    	
-    	
+
+
     }
 
-    
+
     public static void listFilesForFolder(final File folder, HashSet<String> classList) {
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
@@ -405,6 +425,6 @@ public class Main extends Application{
 
     }
     */
-  
+
 
 }
