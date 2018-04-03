@@ -92,6 +92,7 @@ public class Main extends Application{
 
     @Override
     public void start(Stage primaryStage) {
+    	GridPane displayGrid = new GridPane();
 
         primaryStage.setTitle("Critters");
         GridPane grid = new GridPane();
@@ -121,7 +122,7 @@ public class Main extends Application{
                 try{
                     int makeValue = Integer.parseInt(makeField.getText());
                     System.out.println("test");
-                    //add make functionality
+                    showMake("Craig", makeValue, displayGrid);
                 }
                 catch(Exception c){
                     makeField.setPromptText("That was not a valid number. Enter amount you want to make.");
@@ -184,33 +185,41 @@ public class Main extends Application{
         Button statsBtn = new Button("Run Stats");
         GridPane.setConstraints(statsBtn, 0, 4);
         grid.getChildren().add(statsBtn);
-
-        Canvas canvas = new Canvas(300, 250);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        grid.getChildren().add(canvas);
-
-        drawShapes(gc);
-
-		GridPane displayGrid = new GridPane();
-		for (int column = 0; column < Param.world_width; column++) {
-            for (int row = 0 ; row < Param.world_height; row++) {
+        
+		for (int column = 0; column < Params.world_width; column++) {
+            for (int row = 0 ; row < Params.world_height; row++) {
                 Canvas canvas = new Canvas(25,25);
 				GraphicsContext gc = canvas.getGraphicsContext2D();
-				gc.setFill(Color.GREEN);
-		        gc.fillCircle(10, 10, 5, 5);
+				gc.setStroke(Color.BLACK);
+		        gc.strokeRect(0, 0, 25, 25);
                 GridPane.setConstraints(canvas, column, row);
-                box.getChildren().add(canvas);
+                displayGrid.getChildren().add(canvas);
             }
         }
 
-
+		GridPane.setConstraints(displayGrid, 0, 0);
+		grid.getChildren().add(displayGrid);
+		
         primaryStage.setScene(new Scene(grid));
         primaryStage.show();
+        System.out.flush();
+    }
 
-
-
-
-
+ 
+    public void showMake(String critter, int num, GridPane displayGrid) {
+    	for(int i = 0; i < num; i++) {
+    		try {
+        		Critter.makeCritter(critter);
+        	}
+        	catch(InvalidCritterException e){
+        		System.out.println(e);
+        	}
+    		
+    	Critter.displayWorld(displayGrid);
+    	}
+    	
+    	
+    }
 
     /**
 
@@ -335,11 +344,6 @@ public class Main extends Application{
 
     }
     */
-    System.out.flush();
-
-
-    }
-    private void drawShapes(GraphicsContext gc) {
-    }
+  
 
 }

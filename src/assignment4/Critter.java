@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javafx.*;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 
 /* see the PDF for descriptions of the methods and fields in this class
@@ -564,7 +568,7 @@ public abstract class Critter {
 	 * If there are multiple critters at one location, the last critter added to the list at that spot gets its symbol displayed
 	 * Outputs the grid world
 	 */
-	public static void displayWorld() {
+	/*public static void displayWorld() {
 		final int displayWidth = Params.world_width + 2;
 		final int displayHeight = Params.world_height + 2;
 		String[][] world = new String[displayHeight][displayWidth];
@@ -597,6 +601,19 @@ public abstract class Critter {
 				System.out.print(world[y][x]);
 			}
 			System.out.println();
+		}
+	}*/
+	
+	public static void displayWorld(GridPane grid) {
+		for(Critter c: population) {
+			Canvas canvas = new Canvas(25,25);
+			GraphicsContext gc = canvas.getGraphicsContext2D();
+			gc.setStroke(Color.BLACK);
+	        gc.strokeRect(0, 0, 25, 25);
+            GridPane.setConstraints(canvas, c.x_coord, c.y_coord);
+            gc.setFill(Color.GREEN);
+	        gc.fillRect(0, 0, 10, 10);
+            grid.getChildren().add(canvas);
 		}
 	}
 }
