@@ -611,16 +611,16 @@ public abstract class Critter {
 			gc.setStroke(Color.BLACK);
 	        gc.strokeRect(0, 0, 24, 24);
 
-			gc.setStroke(Color.c.viewOutlineColor);
-			gc.setFill(Color.c.viewFillColor);
+			gc.setStroke(Color.c.viewOutlineColor());
+			gc.setFill(Color.c.viewFillColor());
 
-			if(c.viewShape == CritterShape.CIRCLE){
+			if(c.viewShape() == CritterShape.CIRCLE){
 				gc.fillOval(6, 6, 12, 12);
 				gc.strokeOval(6, 6, 12, 12);
 			}
 			else{
 				double[] x, y;
-				int numPoints = chooseShape(c.viewShape, x, y);
+				int numPoints = chooseShape(c.viewShape(), x, y);
 				gc.fillPolygon(x, y, numPoints);
 			}
 
@@ -632,20 +632,28 @@ public abstract class Critter {
 	private int chooseShape(CritterShape shape, double[] x, double[] y){
 		switch(shape){
 			case SQUARE:
-				x = {6.0, 6.0, 18.0, 18.0};
-				y = {6.0, 18.0, 18.0, 6.0};
+				double[] xSquare = {6.0, 6.0, 18.0, 18.0};
+				double[] ySquare = {6.0, 18.0, 18.0, 6.0};
+				x = xSquare;
+				y = ySquare;
 				return 4;
 			case TRIANGLE:
-				x = {12.0, 18.0, 6.0};
-				y = {6.0, 18.0, 18.0};
+				double[] xTriangle = {12.0, 18.0, 6.0};
+				double[] yTriange = {6.0, 18.0, 18.0};
+				x = xTriangle;
+				y = yTriange;
 				return 3;
 			case DIAMOND:
-				x = {12.0, 18.0, 12.0, 6.0};
-				y = {6.0, 12.0, 18.0, 12.0};
+				double[] xDiamond = {12.0, 18.0, 12.0, 6.0};
+				double[] yDiamond = {6.0, 12.0, 18.0, 12.0};
+				x = xDiamond;
+				y = yDiamond;
 				return 4;
 			case STAR:
-				x = {12.0, 8.0, 18.0, 6.0, 18.0};
-				y = {6.0, 18.0, 9.0, 9.0, 16.0};
+				double[] xStar = {12.0, 8.0, 18.0, 6.0, 18.0};
+				double[] yStar = {6.0, 18.0, 9.0, 9.0, 16.0};
+				x = xStar;
+				y = yStar;
 				return 5;
 		}
 	}
