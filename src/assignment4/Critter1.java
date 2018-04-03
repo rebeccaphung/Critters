@@ -30,14 +30,14 @@ public class Critter1 extends Critter{
 	private int evaded;
 	private boolean rest;
 	private int timeCount;
-	
+
 	/**
      * Critter 1 as a String
      * @return string representation of Critter1
      */
 	@Override
 	public String toString() { return "1"; }
-	
+
 	/**
 	 * Critter1 constructor
 	 * Initializes timeCount, evaded, and algaeCount to 0
@@ -50,7 +50,7 @@ public class Critter1 extends Critter{
 		evaded = 0;
 		algaeCount = 0;
 	}
-	
+
 	/**
 	 * Critter1 walks every other time step
 	 * Reproduces at when its energy is more than double the required reproduction energy
@@ -62,19 +62,19 @@ public class Critter1 extends Critter{
 			walk(dir);
 		}
 		rest = !rest;
-		
+
 		if (getEnergy() > (Params.min_reproduce_energy * 2)) {
 			Critter1 child = new Critter1();
 			reproduce(child, Critter.getRandomInt(8));
 		}
-		
+
 		if(timeCount == 10) {
 			timeCount = 0;
 			dir = Critter.getRandomInt(8);
 		}
 		timeCount++;
 	}
-	
+
 	/**
 	 * Critter1 fight function
 	 * If the critter encountered is algae, fight and increase algae counter
@@ -90,7 +90,7 @@ public class Critter1 extends Critter{
 		evaded++;
 		return false;
 	}
-	
+
 	/**
 	 * Critter1 runStat
 	 * Reports the amount of algae consumed and critters evaded for every instance of Critter1 in population
@@ -106,13 +106,16 @@ public class Critter1 extends Critter{
 			eCount = ((Critter1) w).evaded;
 			stats += "Critter1 - Index: " + indexNum + "\t" + "Algae consumed: " + aCount + "\t" + "Critters evaded: " + eCount + "\n";
 		}
-		
+
 		return stats;
 	}
-	
-	@Override
-	public CritterShape viewShape() { return CritterShape.SQUARE; }
 
 	@Override
-	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.BLUE; }
+	public CritterShape viewShape() { return CritterShape.TRIANGLE; }
+
+	@Override
+	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.GREEN; }
+
+	@Override
+	public javafx.scene.paint.Color viewFillColor() { return javafx.scene.paint.Color.BLUE; }
 }
