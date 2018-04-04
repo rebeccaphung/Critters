@@ -28,14 +28,14 @@ public class Critter2 extends Critter{
 	private int numIsolation;
 	private int prevEnergy;
 	private int energyGained;
-	
+
 	/**
 	 * Critter2 as a string
 	 * @return "2" the marker of Critter2
 	 */
 	@Override
 	public String toString(){ return "2"; }
-	
+
 	/**
 	 * Critter2 constructor
 	 * Initializes numIsolation and eneergyGained to 0
@@ -47,7 +47,7 @@ public class Critter2 extends Critter{
 		prevEnergy = Params.start_energy;
 		energyGained = 0;
 	}
-	
+
 	/**
 	 * Critter2 time step
 	 * Calculates how many time steps since the last non-algae critter interaction
@@ -61,7 +61,7 @@ public class Critter2 extends Critter{
 		prevEnergy = this.getEnergy();
 		numIsolation++;
 	}
-	
+
 	/**
 	 * Critter2 fight function
 	 * Only fights with algae
@@ -70,7 +70,7 @@ public class Critter2 extends Critter{
 	 */
 	public boolean fight(String other) {
 		if(other.equals("@")) {
-			
+
 			return true;
 		}
 		for(int runDirection = 0; runDirection < 7; runDirection++) {
@@ -78,12 +78,12 @@ public class Critter2 extends Critter{
 				run(runDirection);
 			}
 		}
-		
+
 		dir = Critter.getRandomInt(8);
 		numIsolation = 0;
 		return false;
 	}
-	
+
 	/**
 	 * Critter2 runStats
 	 * Reports the current energy, energy gained, and time in isolation for each instance of Critter2 in population
@@ -99,17 +99,20 @@ public class Critter2 extends Critter{
 			energy = c.getEnergy();
 			eGained = ((Critter2) c).energyGained;
 			isoNum = ((Critter2) c).numIsolation;
-			
+
 			stats += "Critter2 - Index: " + indexNum + "\t" + "Energy: " + energy + "\t" + "Energy gained: " + eGained + "\t" + "Time in isolation: " + isoNum + "\n";
 		}
-		
+
 		return stats;
 	}
-	
-	@Override
-	public CritterShape viewShape() { return CritterShape.SQUARE; }
 
 	@Override
-	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.BLUE; }
-	
+	public CritterShape viewShape() { return CritterShape.CIRCLE; }
+
+	@Override
+	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.RED; }
+
+	@Override
+	public javafx.scene.paint.Color viewFillColor() { return javafx.scene.paint.Color.BLACK; }
+
 }
