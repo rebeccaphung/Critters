@@ -190,13 +190,33 @@ public class Main extends Application{
         stepField.setPromptText("Enter amount you want to step.");
         GridPane.setConstraints(stepField, 1, 1);
         controllerGrid.getChildren().add(stepField);
+
+		EventHandler<ActionEvent> stepAction = changeAnimationSpeed();
+
+		ComboBox stepDD = new ComboBox("Animation Speed");
+		stepDD.getI.addAll(
+			"1 step per frame",
+			"5 steps per frame",
+			"10 step per frame",
+			"50 steps per frame",
+			"100 step per frame",
+			"all steps in one frame"
+		);
+
         stepBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 try{
                     int stepValue = Integer.parseInt(stepField.getText());
+					int animationValue = 0;
+					if(animationValue == 0){
+						animationValue = stepValue - 1;
+					}
 					for(int i = 0; i < stepValue; i++){
 						worldTimeStep();
+						if(i % animationValue == 0){
+							displayWorld(displayGrid);
+						}
 					}
                 }
                 catch(Exception c){
