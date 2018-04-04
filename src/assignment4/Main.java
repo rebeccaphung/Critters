@@ -167,16 +167,18 @@ public class Main extends Application{
         controllerGrid.getChildren().add(makeDD);
         controllerGrid.getChildren().add(makeBtn);
         controllerGrid.getChildren().add(makeField);
-        
+
         makeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 try{
-                    int makeValue = Integer.parseInt(makeField.getText());
-                    String critterName = makeDD.getValue().toString();
-                    System.out.println(critterName);
-                    System.out.println("test");
-                    showMake("Critter3", makeValue, displayGrid);
+					if(!animationFlag){
+	                    int makeValue = Integer.parseInt(makeField.getText());
+	                    String critterName = makeDD.getValue().toString();
+	                    System.out.println(critterName);
+	                    System.out.println("test");
+	                    showMake("Critter3", makeValue, displayGrid);
+					}
                 }
                 catch(Exception c){
                     makeField.setPromptText("That was not a valid number. Enter amount you want to make.");
@@ -205,20 +207,31 @@ public class Main extends Application{
 			"all steps in one frame"
 		);
 
+		private boolean animationFlag;
+
         stepBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 try{
-                    int stepValue = Integer.parseInt(stepField.getText());
-					int animationValue = 0;
-					if(animationValue == 0){
-						animationValue = stepValue - 1;
-					}
-					for(int i = 0; i < stepValue; i++){
-						worldTimeStep();
-						if(i % animationValue == 0){
-							displayWorld(displayGrid);
+					if(!animationFlag){
+						animationFlag = true;
+	                    int stepValue = Integer.parseInt(stepField.getText());
+						int animationValue = 0;
+						try{
+							animationValue = Integer.parseInt(stepDD.getValue().toString().substring(0, IndexOf(" ")));
 						}
+						catch(Exception e){
+							animationValue = stepValue - 1;
+						}
+						for(int i = 0; i < stepValue && !stopFlag; i++){
+							worldTimeStep();
+							if(i % animationValue == 0){
+								displayWorld(displayGrid);
+								wait(500);
+							}
+						}
+						stopFlag = false;
+						animationFlag = false;
 					}
                 }
                 catch(Exception c){
@@ -227,14 +240,17 @@ public class Main extends Application{
             }
         });
 
+		private boolean stopFlag;
+
         Button stopBtn = new Button("Stop");
         GridPane.setConstraints(stopBtn, 4, 1);
         controllerGrid.getChildren().add(stopBtn);
         stopBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-            	System.out.println("test");
-                //add stop functionality
+				if(animationFlag){
+					stopFlag = true;
+				}
 
             }
         });
@@ -250,8 +266,10 @@ public class Main extends Application{
             @Override
             public void handle(ActionEvent e) {
                 try{
-                    int seedValue = Integer.parseInt(seedField.getText());
-                    Critter.seed(seedValue);
+					if(!animationFlag){
+	                    int seedValue = Integer.parseInt(seedField.getText());
+	                    Critter.seed(seedValue);
+					}
                 }
                 catch(Exception c){
                     seedField.setPromptText("That was not a valid number. Enter seed value.");
@@ -266,8 +284,10 @@ public class Main extends Application{
             @Override
             public void handle(ActionEvent e) {
                 //add runStats functionality
-				String runStatsString = "";
-				textPane.replaceSelection(runStatsString);
+				if(!animationFlag){
+					String runStatsString = "";
+					textPane.replaceSelection(runStatsString);
+				}
             }
         });
 
