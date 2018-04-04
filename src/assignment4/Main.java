@@ -64,49 +64,7 @@ public class Main extends Application{
      * @throws InvalidCritterException
      */
     public static void main(String[] args) throws InvalidCritterException {
-<<<<<<< HEAD
-    	
-=======
 
-
-    	Path currentRelativePath = Paths.get("");
-    	String s = currentRelativePath.toAbsolutePath().toString();
-    	HashSet<String> classList = new HashSet<String>();
-    	ArrayList<String> critterClass = new ArrayList<String>();
-    	File general = new File(s);
-    	listFilesForFolder(general, classList);
-
-    	for(String f : classList) {
-    		try {
-				Class<?> c = Class.forName(myPackage + "." + f.substring(0, f.lastIndexOf(".")));
-				try {
-					Class<?> cC = Class.forName(myPackage + "." + "Critter");
-					if(cC.isAssignableFrom(c)) {
-						critterClass.add(c.getName());
-					}
-
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					System.out.println("bad1");
-				}
-			} catch (Exception | java.lang.NoClassDefFoundError e) {
-				// TODO Auto-generated catch block
-				System.out.println("bad2");
-			}
-    	}
-
-    	for(String f : classList) {
-    		//System.out.println(f);
-    	}
-
-    	for(String f : critterClass) {
-    		System.out.println(f);
-    	}
-
-
-
-
->>>>>>> origin/master
         if (args.length != 0) {
             try {
                 inputFile = args[0];
@@ -141,15 +99,15 @@ public class Main extends Application{
 
     @Override
     public void start(Stage primaryStage) {
-<<<<<<< HEAD
-    	
+
+
     	Path currentRelativePath = Paths.get("");
     	String s = currentRelativePath.toAbsolutePath().toString();
     	HashSet<String> classList = new HashSet<String>();
     	ArrayList<String> critterClass = new ArrayList<String>();
     	File general = new File(s);
     	listFilesForFolder(general, classList);
-    	
+
     	for(String f : classList) {
     		try {
 				Class<?> c = Class.forName(myPackage + "." + f.substring(0, f.lastIndexOf(".")));
@@ -158,7 +116,7 @@ public class Main extends Application{
 					if(cC.isAssignableFrom(c)) {
 						critterClass.add(c.getName());
 					}
-					
+
 				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					System.out.println("bad1");
@@ -168,11 +126,8 @@ public class Main extends Application{
 				System.out.println("bad2");
 			}
     	}
-    	
-    	GridPane displayGrid = new GridPane();
-=======
 
->>>>>>> origin/master
+    	GridPane displayGrid = new GridPane();
 
         primaryStage.setTitle("Critters");
         GridPane grid = new GridPane();
@@ -196,36 +151,23 @@ public class Main extends Application{
         });
 
         Button makeBtn = new Button("Make");
-<<<<<<< HEAD
         TextField makeField = new TextField();
         ComboBox makeDD = new ComboBox();
-        
+
         for(String critters : critterClass) {
         	String currentName = (critters.substring(critters.lastIndexOf(".") + 1, critters.length()));
-        	MenuItem newItem = new MenuItem(currentName); 
+        	MenuItem newItem = new MenuItem(currentName);
         	makeDD.getItems().add(currentName);
         }
-        
-        GridPane.setConstraints(makeDD, 0, 1);
-        GridPane.setConstraints(makeBtn, 0, 1);
-        GridPane.setConstraints(makeField, 1, 1);
-        makeField.setPromptText("Enter amount");
-        grid.getChildren().add(makeDD);
-        grid.getChildren().add(makeBtn);
-        grid.getChildren().add(makeField);
-        
-=======
-        TextField makeField = new TextField ();
-        final ComboBox makeMenu = new ComboBox();
 
-
+        GridPane.setConstraints(makeDD, 1, 0);
         GridPane.setConstraints(makeBtn, 0, 0);
         GridPane.setConstraints(makeField, 2, 0);
         makeField.setPromptText("Enter amount");
+        controllerGrid.getChildren().add(makeDD);
         controllerGrid.getChildren().add(makeBtn);
         controllerGrid.getChildren().add(makeField);
-
->>>>>>> origin/master
+        
         makeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -241,7 +183,7 @@ public class Main extends Application{
                 }
             }
         });
-        
+
 
         Button stepBtn = new Button("Step");
         GridPane.setConstraints(stepBtn, 0, 1);
