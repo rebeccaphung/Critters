@@ -302,7 +302,7 @@ public class Main extends Application{
     	                    critters = Critter.getInstances(c.getText());
     	                    java.lang.reflect.Method method;
     		                    try {
-    			                    Class<?> c = Class.forName(myPackage + "." + input[1]);
+    			                    Class<?> c = Class.forName(myPackage + "." + c.getText());
     			                    method = c.getMethod("runStats", List.class);
     			                    if(critters.isEmpty()) {
     			                    	runStatsString += method.invoke(c, critters) + "\n";
@@ -310,7 +310,7 @@ public class Main extends Application{
     			                    	runStatsString += method.invoke(critters.get(0), critters) + "\n";
     			                    }
     		                    }catch(Exception e) {
-    		                    	System.out.println("error processing: " + line);
+    		                    	System.out.println("error processing: ");
     		                    }
 						}
 					}
