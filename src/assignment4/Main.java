@@ -28,6 +28,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -63,44 +65,6 @@ public class Main extends Application{
      */
     public static void main(String[] args) throws InvalidCritterException {
     	
-    	
-    	Path currentRelativePath = Paths.get("");
-    	String s = currentRelativePath.toAbsolutePath().toString();
-    	HashSet<String> classList = new HashSet<String>();
-    	ArrayList<String> critterClass = new ArrayList<String>();
-    	File general = new File(s);
-    	listFilesForFolder(general, classList);
-    	
-    	for(String f : classList) {
-    		try {
-				Class<?> c = Class.forName(myPackage + "." + f.substring(0, f.lastIndexOf(".")));
-				try {
-					Class<?> cC = Class.forName(myPackage + "." + "Critter");
-					if(cC.isAssignableFrom(c)) {
-						critterClass.add(c.getName());
-					}
-					
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					System.out.println("bad1");
-				}
-			} catch (Exception | java.lang.NoClassDefFoundError e) {
-				// TODO Auto-generated catch block
-				System.out.println("bad2");
-			}
-    	}
-    	
-    	for(String f : classList) {
-    		//System.out.println(f);
-    	}
-    	
-    	for(String f : critterClass) {
-    		System.out.println(f);
-    	}
-    	
-    	
-    	
-    	
         if (args.length != 0) {
             try {
                 inputFile = args[0];
@@ -135,6 +99,33 @@ public class Main extends Application{
 
     @Override
     public void start(Stage primaryStage) {
+    	
+    	Path currentRelativePath = Paths.get("");
+    	String s = currentRelativePath.toAbsolutePath().toString();
+    	HashSet<String> classList = new HashSet<String>();
+    	ArrayList<String> critterClass = new ArrayList<String>();
+    	File general = new File(s);
+    	listFilesForFolder(general, classList);
+    	
+    	for(String f : classList) {
+    		try {
+				Class<?> c = Class.forName(myPackage + "." + f.substring(0, f.lastIndexOf(".")));
+				try {
+					Class<?> cC = Class.forName(myPackage + "." + "Critter");
+					if(cC.isAssignableFrom(c)) {
+						critterClass.add(c.getName());
+					}
+					
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					System.out.println("bad1");
+				}
+			} catch (Exception | java.lang.NoClassDefFoundError e) {
+				// TODO Auto-generated catch block
+				System.out.println("bad2");
+			}
+    	}
+    	
     	GridPane displayGrid = new GridPane();
 
         primaryStage.setTitle("Critters");
@@ -153,13 +144,20 @@ public class Main extends Application{
         });
 
         Button makeBtn = new Button("Make");
-        TextField makeField = new TextField ();
-        final ComboBox makeMenu = new ComboBox();
+        TextField makeField = new TextField();
+        ComboBox makeDD = new ComboBox();
         
+        for(String critters : critterClass) {
+        	String currentName = (critters.substring(critters.lastIndexOf(".") + 1, critters.length()));
+        	MenuItem newItem = new MenuItem(currentName); 
+        	makeDD.getItems().add(currentName);
+        }
         
+        GridPane.setConstraints(makeDD, 0, 1);
         GridPane.setConstraints(makeBtn, 0, 1);
         GridPane.setConstraints(makeField, 1, 1);
         makeField.setPromptText("Enter amount");
+        grid.getChildren().add(makeDD);
         grid.getChildren().add(makeBtn);
         grid.getChildren().add(makeField);
         
@@ -168,6 +166,8 @@ public class Main extends Application{
             public void handle(ActionEvent e) {
                 try{
                     int makeValue = Integer.parseInt(makeField.getText());
+                    String critterName = makeDD.getValue().toString();
+                    System.out.println(critterName);
                     System.out.println("test");
                     showMake("Critter3", makeValue, displayGrid);
                 }
@@ -176,6 +176,7 @@ public class Main extends Application{
                 }
             }
         });
+        
 
         Button stepBtn = new Button("Step");
         GridPane.setConstraints(stepBtn, 0, 2);
@@ -277,7 +278,9 @@ public class Main extends Application{
                 listFilesForFolder(fileEntry, classList);
             } else {
             	if(fileEntry.getName().contains(".class") && !fileEntry.getName().equals(".classpath")) {
-            		classList.add(fileEntry.getName());
+            		if(!fileEntry.getName().equals("Critter.class") && !fileEntry.getName().contains("$")) {
+            			classList.add(fileEntry.getName());
+            		}
             	}
             }
         }
