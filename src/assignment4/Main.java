@@ -277,15 +277,44 @@ public class Main extends Application{
             }
         });
 
+		ComboBox statsDD = new ComboBox();
+		for(String critters : critterClass) {
+        	String currentName = (critters.substring(critters.lastIndexOf(".") + 1, critters.length()));
+        	CheckBox newCheckbox = new CheckBox(currentName);
+	        statsDD.getItems().add(newCheckbox);
+        }
+
         Button statsBtn = new Button("Run Stats");
         GridPane.setConstraints(statsBtn, 0, 3);
         controllerGrid.getChildren().add(statsBtn);
+		GridPane.setConstraints(statsDD, 1, 3);
+        controllerGrid.getChildren().add(statsDD);
 		statsBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 //add runStats functionality
 				if(!animationFlag){
 					String runStatsString = "";
+
+					for(CheckBox c : statsDD.getItems()){
+						if(c.isSelected()){
+							List<Critter> critters = new ArrayList<Critter>();
+    	                    critters = Critter.getInstances(c.getText());
+    	                    java.lang.reflect.Method method;
+    		                    try {
+    			                    Class<?> c = Class.forName(myPackage + "." + input[1]);
+    			                    method = c.getMethod("runStats", List.class);
+    			                    if(critters.isEmpty()) {
+    			                    	runStatsString += method.invoke(c, critters) + "\n";
+    			                    }else {
+    			                    	runStatsString += method.invoke(critters.get(0), critters) + "\n";
+    			                    }
+    		                    }catch(Exception e) {
+    		                    	System.out.println("error processing: " + line);
+    		                    }
+						}
+					}
+
 					textPane.replaceSelection(runStatsString);
 				}
             }
