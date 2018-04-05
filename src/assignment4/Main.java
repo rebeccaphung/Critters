@@ -104,10 +104,14 @@ public class Main extends Application{
         launch(args);
     }
 
-
+	/**
+	 * start method that acts as a controller
+	 * @param primaryStage stage that display and controller goes on
+	 */
     @Override
     public void start(Stage primaryStage) {
 
+		//initializing all the grids for display
     	ArrayList<String> critterClass = getCritterExtends();
     	GridPane grid = new GridPane();
         primaryStage.setTitle("Critters");
@@ -122,6 +126,7 @@ public class Main extends Application{
 		animatingFlag.set(false);
 		Timeline timeline = new Timeline();
 
+		//quit button creation and functionality
         Button quitBtn = new Button("Quit");
         GridPane.setConstraints(quitBtn, 0, 4);
         controllerGrid.getChildren().add(quitBtn);
@@ -133,6 +138,7 @@ public class Main extends Application{
             }
         });
 
+		//make button creation and functionality
         Button makeBtn = new Button("Make");
         TextField makeField = new TextField();
         ComboBox makeDD = new ComboBox();
@@ -176,6 +182,7 @@ public class Main extends Application{
             }
         });
 
+		//step/animation button creation and functionality
         CheckBox animateChk = new CheckBox("Animation");
         ComboBox speedDD = new ComboBox();
         speedDD.getItems().addAll("x1", "x2", "x5", "x10", "x100");
@@ -316,6 +323,7 @@ public class Main extends Application{
             }
         });
 
+		//stop button creation and functionality
         Button stopBtn = new Button("Stop");
         GridPane.setConstraints(stopBtn, 4, 1);
         controllerGrid.getChildren().add(stopBtn);
@@ -328,6 +336,8 @@ public class Main extends Application{
             }
         });
 
+
+		//stats button creation and functionality
 /*		ComboBox statsDD = new ComboBox();
 		for(String critters : critterClass) {
         	String currentName = (critters.substring(critters.lastIndexOf(".") + 1, critters.length()));
