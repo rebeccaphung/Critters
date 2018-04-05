@@ -151,7 +151,6 @@ public class Main extends Application{
             @Override
             public void handle(ActionEvent e) {
                 try{
-<<<<<<< HEAD
 					int makeValue = 1;
 	                try {
 						makeValue = Integer.parseInt(makeField.getText());
@@ -167,14 +166,6 @@ public class Main extends Application{
 						critterName = makeDD.getValue().toString();
 					} catch (Exception e1) {
 						makeField.setPromptText("No critter type selected");
-=======
-					if(!animationFlag){
-	                    int makeValue = Integer.parseInt(makeField.getText());
-	                    String critterName = makeDD.getValue().toString();
-	                    //System.out.println(critterName);
-	                    //System.out.println("test");
-	                    showMake(critterName, makeValue, displayGrid);
->>>>>>> origin/master
 					}
 	                showMake(critterName, makeValue, critterGrid);
                 }
