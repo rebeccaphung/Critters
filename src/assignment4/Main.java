@@ -120,7 +120,8 @@ public class Main extends Application{
 		stopFlag.set(false);
 		final BooleanProperty animatingFlag = new SimpleBooleanProperty();
 		animatingFlag.set(false);
-		
+		Timeline timeline = new Timeline();
+
         Button quitBtn = new Button("Quit");
         GridPane.setConstraints(quitBtn, 0, 4);
         controllerGrid.getChildren().add(quitBtn);
@@ -188,7 +189,7 @@ public class Main extends Application{
         		animationFlag.set(!animationFlag.getValue());
         	}
         });
-        
+
         Button seedBtn = new Button("Seed");
         GridPane.setConstraints(seedBtn, 0, 2);
         controllerGrid.getChildren().add(seedBtn);
@@ -208,7 +209,7 @@ public class Main extends Application{
                 }
             }
         });
-        
+
 
         Button stepBtn = new Button("Step");
         TextField stepField = new TextField ();
@@ -244,7 +245,7 @@ public class Main extends Application{
 						}
 					}
 					stepValue = stepValue * multiplier;
-					
+
 					if(!animationFlag.getValue()){
 						for(int i = 0; i < stepValue; i++){
 							Critter.worldTimeStep();
@@ -256,7 +257,7 @@ public class Main extends Application{
 						try {
 							speed = Integer.parseInt(speedDD.getValue().toString().substring(1));
 						} catch (Exception e1) {}
-						
+
 						makeBtn.setDisable(true);
 						makeField.setDisable(true);
 						makeDD.setDisable(true);
@@ -268,7 +269,7 @@ public class Main extends Application{
 						seedBtn.setDisable(true);
 						seedField.setDisable(true);
 						quitBtn.setDisable(true);
-						
+
 						animatingFlag.set(true);
 						while(animationFlag.getValue() && !stopFlag.get()) {
 							System.out.println(stepValue);
@@ -277,7 +278,7 @@ public class Main extends Application{
 								stepValue++;
 							}else {
 								Critter.worldTimeStep();
-								/*KeyFrame oneFrame = new KeyFrame(Duration.millis(1000/speed), new EventHandler<ActionEvent>() {
+								KeyFrame oneFrame = new KeyFrame(Duration.millis(1000/speed), new EventHandler<ActionEvent>() {
 									@Override
 									public void handle(ActionEvent event) {
 										Critter.worldTimeStep();
@@ -285,17 +286,17 @@ public class Main extends Application{
 									}
 								});
 								timeline.getKeyFrames().add(oneFrame);
-								//timeline.play();
+								timeline.play();
 */							}
 							stepValue--;
-							
-							Critter.displayWorld(critterGrid);
-							TimeUnit.MILLISECONDS.sleep(1000/speed);
+
+							//Critter.displayWorld(critterGrid);
+							//TimeUnit.MILLISECONDS.sleep(1000/speed);
 						}
-						
+
 						stopFlag.set(false);
 						animatingFlag.set(false);
-						
+
 						quitBtn.setDisable(false);
 						makeBtn.setDisable(false);
 						makeField.setDisable(false);
@@ -314,7 +315,7 @@ public class Main extends Application{
                 }
             }
         });
-                
+
         Button stopBtn = new Button("Stop");
         GridPane.setConstraints(stopBtn, 4, 1);
         controllerGrid.getChildren().add(stopBtn);
@@ -322,7 +323,7 @@ public class Main extends Application{
             @Override
             public void handle(ActionEvent e) {
 				if(animatingFlag.get()){
-					stopFlag.set(true);;
+					stopFlag.set(true);
 				}
             }
         });
@@ -397,7 +398,7 @@ public class Main extends Application{
             }
         }
     }
-    
+
     public void showMake(String critter, int num, GridPane displayGrid) {
     	for(int i = 0; i < num; i++) {
     		try {
@@ -424,7 +425,7 @@ public class Main extends Application{
             }
         }
     }
-    
+
     public static ArrayList<String> getCritterExtends(){
     	Path currentRelativePath = Paths.get("");
     	String s = currentRelativePath.toAbsolutePath().toString();
@@ -453,7 +454,7 @@ public class Main extends Application{
     	}
     	return critterClass;
     }
-    
+
     /**
 
      * Controller component
