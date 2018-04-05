@@ -609,8 +609,11 @@ public abstract class Critter {
 		for(Critter c: population) {
 			Canvas canvas = new Canvas(24,24);
 			GraphicsContext gc = canvas.getGraphicsContext2D();
-			//gc.setStroke(Color.BLACK);
-	        //gc.strokeRect(0, 0, 24, 24);
+			gc.setFill(Color.WHITE);
+	        gc.fillRect(0, 0, 24, 24);
+
+			gc.setStroke(Color.BLACK);
+	        gc.strokeRect(0, 0, 24, 24);
 
 			gc.setStroke(c.viewOutlineColor());
 			gc.setFill(c.viewFillColor());
@@ -623,7 +626,7 @@ public abstract class Critter {
 				double[] x = new double[] {0.0};
 				double[] y = new double[] {0.0};
 				int numPoints = 0;
-				
+
 				switch(c.viewShape()){
 				case SQUARE:
 					x = Arrays.copyOf(new double[]{6.0, 6.0, 18.0, 18.0}, 4);
