@@ -175,9 +175,9 @@ public class Main extends Application{
 					if(!animationFlag){
 	                    int makeValue = Integer.parseInt(makeField.getText());
 	                    String critterName = makeDD.getValue().toString();
-	                    System.out.println(critterName);
-	                    System.out.println("test");
-	                    showMake("Critter3", makeValue, displayGrid);
+	                    //System.out.println(critterName);
+	                    //System.out.println("test");
+	                    showMake(critterName, makeValue, displayGrid);
 					}
                 }
                 catch(Exception c){
