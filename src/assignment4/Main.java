@@ -285,22 +285,20 @@ public class Main extends Application{
 								stepValue++;
 							}else {
 								Critter.worldTimeStep();
-								KeyFrame oneFrame = new KeyFrame(Duration.millis(1000/speed), new EventHandler<ActionEvent>() {
+								/*KeyFrame oneFrame = new KeyFrame(Duration.millis(1000/speed), new EventHandler<ActionEvent>() {
 									@Override
 									public void handle(ActionEvent event) {
 										Critter.worldTimeStep();
 										Critter.displayWorld(critterGrid);
 									}
 								});
-								timeline.getKeyFrames().add(oneFrame);
-								timeline.play();
-*/							}
+								timeline.getKeyFrames().add(oneFrame);*/
+							}
 							stepValue--;
-
-							//Critter.displayWorld(critterGrid);
-							//TimeUnit.MILLISECONDS.sleep(1000/speed);
+							Critter.displayWorld(critterGrid);
+							TimeUnit.MILLISECONDS.sleep(1000/speed);
 						}
-
+						//timeline.play();
 						stopFlag.set(false);
 						animatingFlag.set(false);
 
