@@ -16,10 +16,12 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import javafx.*;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 
 /* see the PDF for descriptions of the methods and fields in this class
@@ -319,19 +321,21 @@ public abstract class Critter {
 	 * @param critter_class_name
 	 * @throws InvalidCritterException
 	 */
-	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
-		try {
-			Class c = Class.forName(myPackage + "." + critter_class_name);
-			Critter newCritter = (Critter)c.newInstance();
-			newCritter.x_coord = rand.nextInt(Params.world_width);
-			newCritter.y_coord = rand.nextInt(Params.world_height);
-			newCritter.energy = Params.start_energy;
-			population.add(newCritter);
-		}
-		catch(Exception | java.lang.NoClassDefFoundError error) {
-			InvalidCritterException e  = new InvalidCritterException(critter_class_name);
-			throw e;
-		}
+	public static void makeCritter(String critter_class_name) {
+			try {
+				Class c = Class.forName(myPackage + "." + critter_class_name);
+				Critter newCritter = (Critter)c.newInstance();
+				newCritter.x_coord = rand.nextInt(Params.world_width);
+				newCritter.y_coord = rand.nextInt(Params.world_height);
+				newCritter.energy = Params.start_energy;
+				population.add(newCritter);
+			} catch (ClassNotFoundException e) {
+				
+			} catch (InstantiationException e) {
+				
+			} catch (IllegalAccessException e) {
+				
+			}
 	}
 
 	/**
@@ -547,8 +551,8 @@ public abstract class Critter {
 		for(int i = 0; i < Params.refresh_algae_count; i++) {
 			try {
 				makeCritter("Algae");
-			} catch (InvalidCritterException e) {
-				System.out.println(e);
+			} catch (Exception e) {
+				
 			}
 		}
 	}

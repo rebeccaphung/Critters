@@ -15,18 +15,25 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.animation.KeyFrame;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -35,6 +42,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 
 /*
@@ -100,66 +108,38 @@ public class Main extends Application{
     @Override
     public void start(Stage primaryStage) {
 
-
-    	Path currentRelativePath = Paths.get("");
-    	String s = currentRelativePath.toAbsolutePath().toString();
-    	HashSet<String> classList = new HashSet<String>();
-    	ArrayList<String> critterClass = new ArrayList<String>();
-    	File general = new File(s);
-    	listFilesForFolder(general, classList);
-
-    	for(String f : classList) {
-    		try {
-				Class<?> c = Class.forName(myPackage + "." + f.substring(0, f.lastIndexOf(".")));
-				try {
-					Class<?> cC = Class.forName(myPackage + "." + "Critter");
-					if(cC.isAssignableFrom(c)) {
-						critterClass.add(c.getName());
-					}
-
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					System.out.println("bad1");
-				}
-			} catch (Exception | java.lang.NoClassDefFoundError e) {
-				// TODO Auto-generated catch block
-				System.out.println("bad2");
-			}
-    	}
-
-    	GridPane displayGrid = new GridPane();
-
+    	ArrayList<String> critterClass = getCritterExtends();
+    	GridPane grid = new GridPane();
         primaryStage.setTitle("Critters");
-        GridPane grid = new GridPane();
-
-		GridPane displayGrid = new GridPane();
+        GridPane critterGrid = new GridPane();
+        drawGrid(critterGrid);
 		GridPane controllerGrid = new GridPane();
-
-		JTextPane textPane = new JTextPane();
-
-
+		final BooleanProperty animationFlag = new SimpleBooleanProperty();
+		animationFlag.set(false);
+		final BooleanProperty stopFlag = new SimpleBooleanProperty();
+		stopFlag.set(false);
+		final BooleanProperty animatingFlag = new SimpleBooleanProperty();
+		animatingFlag.set(false);
+		
         Button quitBtn = new Button("Quit");
         GridPane.setConstraints(quitBtn, 0, 4);
         controllerGrid.getChildren().add(quitBtn);
         quitBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+            	stopFlag.set(true);
             	System.exit(0);
-                //add stop functionality
-
             }
         });
 
         Button makeBtn = new Button("Make");
         TextField makeField = new TextField();
         ComboBox makeDD = new ComboBox();
-
+        String currentName;
         for(String critters : critterClass) {
-        	String currentName = (critters.substring(critters.lastIndexOf(".") + 1, critters.length()));
-        	MenuItem newItem = new MenuItem(currentName);
+        	currentName = (critters.substring(critters.lastIndexOf(".") + 1, critters.length()));
         	makeDD.getItems().add(currentName);
         }
-
         GridPane.setConstraints(makeDD, 1, 0);
         GridPane.setConstraints(makeBtn, 0, 0);
         GridPane.setConstraints(makeField, 2, 0);
@@ -167,94 +147,48 @@ public class Main extends Application{
         controllerGrid.getChildren().add(makeDD);
         controllerGrid.getChildren().add(makeBtn);
         controllerGrid.getChildren().add(makeField);
-
         makeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 try{
-					if(!animationFlag){
-	                    int makeValue = Integer.parseInt(makeField.getText());
-	                    String critterName = makeDD.getValue().toString();
-	                    System.out.println(critterName);
-	                    System.out.println("test");
-	                    showMake("Critter3", makeValue, displayGrid);
+					int makeValue = 1;
+	                try {
+						makeValue = Integer.parseInt(makeField.getText());
+					} catch (Exception e1) {
+						if(!makeField.getText().equals("")) {
+							makeValue = 0;
+							makeField.clear();
+							makeField.setPromptText("Enter amount");
+						}
 					}
+	                String critterName = "";
+	                try {
+						critterName = makeDD.getValue().toString();
+					} catch (Exception e1) {
+						makeField.setPromptText("No critter type selected");
+					}
+	                showMake(critterName, makeValue, critterGrid);
                 }
                 catch(Exception c){
-                    makeField.setPromptText("That was not a valid number. Enter amount you want to make.");
+                    System.out.println("Make error");
                 }
             }
         });
 
-
-        Button stepBtn = new Button("Step");
-        GridPane.setConstraints(stepBtn, 0, 1);
-        controllerGrid.getChildren().add(stepBtn);
-        TextField stepField = new TextField ();
-        stepField.setPromptText("Enter amount you want to step.");
-        GridPane.setConstraints(stepField, 1, 1);
-        controllerGrid.getChildren().add(stepField);
-
-		EventHandler<ActionEvent> stepAction = changeAnimationSpeed();
-
-		ComboBox stepDD = new ComboBox("Animation Speed");
-		stepDD.getI.addAll(
-			"1 step per frame",
-			"5 steps per frame",
-			"10 step per frame",
-			"50 steps per frame",
-			"100 step per frame",
-			"all steps in one frame"
-		);
-
-		private boolean animationFlag;
-
-        stepBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                try{
-					if(!animationFlag){
-						animationFlag = true;
-	                    int stepValue = Integer.parseInt(stepField.getText());
-						int animationValue = 0;
-						try{
-							animationValue = Integer.parseInt(stepDD.getValue().toString().substring(0, IndexOf(" ")));
-						}
-						catch(Exception e){
-							animationValue = stepValue - 1;
-						}
-						for(int i = 0; i < stepValue && !stopFlag; i++){
-							worldTimeStep();
-							if(i % animationValue == 0){
-								displayWorld(displayGrid);
-								wait(500);
-							}
-						}
-						stopFlag = false;
-						animationFlag = false;
-					}
-                }
-                catch(Exception c){
-                    stepField.setPromptText("That was not a valid number. Enter amount you want to step.");
-                }
-            }
+        CheckBox animateChk = new CheckBox("Animation");
+        ComboBox speedDD = new ComboBox();
+        speedDD.getItems().addAll("x1", "x2", "x5", "x10", "x100");
+        GridPane.setConstraints(speedDD, 1, 3);
+        GridPane.setConstraints(animateChk, 0, 3);
+        controllerGrid.getChildren().add(animateChk);
+        controllerGrid.getChildren().add(speedDD);
+        animateChk.setOnAction(new EventHandler<ActionEvent>(){
+        	@Override
+        	public void handle(ActionEvent e) {
+        		animationFlag.set(!animationFlag.getValue());
+        	}
         });
-
-		private boolean stopFlag;
-
-        Button stopBtn = new Button("Stop");
-        GridPane.setConstraints(stopBtn, 4, 1);
-        controllerGrid.getChildren().add(stopBtn);
-        stopBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-				if(animationFlag){
-					stopFlag = true;
-				}
-
-            }
-        });
-
+        
         Button seedBtn = new Button("Seed");
         GridPane.setConstraints(seedBtn, 0, 2);
         controllerGrid.getChildren().add(seedBtn);
@@ -266,18 +200,134 @@ public class Main extends Application{
             @Override
             public void handle(ActionEvent e) {
                 try{
-					if(!animationFlag){
-	                    int seedValue = Integer.parseInt(seedField.getText());
-	                    Critter.seed(seedValue);
-					}
+	                int seedValue = Integer.parseInt(seedField.getText());
+	                Critter.setSeed(seedValue);
                 }
                 catch(Exception c){
                     seedField.setPromptText("That was not a valid number. Enter seed value.");
                 }
             }
         });
+        
 
-		ComboBox statsDD = new ComboBox();
+        Button stepBtn = new Button("Step");
+        TextField stepField = new TextField ();
+        stepField.setPromptText("Enter amount");
+		ComboBox stepDD = new ComboBox();
+		stepDD.getItems().addAll("x1", "x2", "x5", "x10", "x100");
+		GridPane.setConstraints(stepBtn, 0, 1);
+		GridPane.setConstraints(stepField, 2, 1);
+		GridPane.setConstraints(stepDD, 1, 1);
+		controllerGrid.getChildren().add(stepBtn);
+		controllerGrid.getChildren().add(stepDD);
+		controllerGrid.getChildren().add(stepField);
+        stepBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                try{
+                	int multiplier = 1;
+					int stepValue = 1;
+					int speed = 1;
+					String mulNum;
+					try {
+						mulNum = stepDD.getValue().toString();
+						mulNum = mulNum.substring(1);
+						multiplier = Integer.parseInt(mulNum);
+					} catch (Exception e2) {}
+					try {
+						stepValue = Integer.parseInt(stepField.getText());
+					} catch (Exception e1) {
+						if(!stepField.getText().equals("")) {
+							stepField.clear();
+							stepField.setPromptText("Enter amount");
+							stepValue = 0;
+						}
+					}
+					stepValue = stepValue * multiplier;
+					
+					if(!animationFlag.getValue()){
+						for(int i = 0; i < stepValue; i++){
+							Critter.worldTimeStep();
+						}
+						Critter.displayWorld(critterGrid);
+					}
+					else {
+						//Timeline timeline = new Timeline();				***************************************************************
+						try {
+							speed = Integer.parseInt(speedDD.getValue().toString().substring(1));
+						} catch (Exception e1) {}
+						
+						makeBtn.setDisable(true);
+						makeField.setDisable(true);
+						makeDD.setDisable(true);
+						animateChk.setDisable(true);
+						speedDD.setDisable(true);
+						stepBtn.setDisable(true);
+						stepField.setDisable(true);
+						stepDD.setDisable(true);
+						seedBtn.setDisable(true);
+						seedField.setDisable(true);
+						quitBtn.setDisable(true);
+						
+						animatingFlag.set(true);
+						while(animationFlag.getValue() && !stopFlag.get()) {
+							System.out.println(stepValue);
+							if(stepValue == 0) {
+								stopFlag.set(true);
+								stepValue++;
+							}else {
+								Critter.worldTimeStep();
+								/*KeyFrame oneFrame = new KeyFrame(Duration.millis(1000/speed), new EventHandler<ActionEvent>() {
+									@Override
+									public void handle(ActionEvent event) {
+										Critter.worldTimeStep();
+										Critter.displayWorld(critterGrid);
+									}
+								});
+								timeline.getKeyFrames().add(oneFrame);
+								//timeline.play();
+*/							}
+							stepValue--;
+							
+							Critter.displayWorld(critterGrid);
+							TimeUnit.MILLISECONDS.sleep(1000/speed);
+						}
+						
+						stopFlag.set(false);
+						animatingFlag.set(false);
+						
+						quitBtn.setDisable(false);
+						makeBtn.setDisable(false);
+						makeField.setDisable(false);
+						makeDD.setDisable(false);
+						animateChk.setDisable(false);
+						speedDD.setDisable(false);
+						stepBtn.setDisable(false);
+						stepField.setDisable(false);
+						stepDD.setDisable(false);
+						seedBtn.setDisable(false);
+						seedField.setDisable(false);
+					}
+                }
+                catch(Exception c){
+                    c.printStackTrace();
+                }
+            }
+        });
+                
+        Button stopBtn = new Button("Stop");
+        GridPane.setConstraints(stopBtn, 4, 1);
+        controllerGrid.getChildren().add(stopBtn);
+        stopBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+				if(animatingFlag.get()){
+					stopFlag.set(true);;
+				}
+            }
+        });
+
+/*		ComboBox statsDD = new ComboBox();
 		for(String critters : critterClass) {
         	String currentName = (critters.substring(critters.lastIndexOf(".") + 1, critters.length()));
         	CheckBox newCheckbox = new CheckBox(currentName);
@@ -318,27 +368,16 @@ public class Main extends Application{
 					textPane.replaceSelection(runStatsString);
 				}
             }
-        });
+        });*/
 
-		for (int column = 0; column < Params.world_width; column++) {
-            for (int row = 0 ; row < Params.world_height; row++) {
-                Canvas canvas = new Canvas(24,24);
-				GraphicsContext gc = canvas.getGraphicsContext2D();
-				gc.setStroke(Color.BLACK);
-		        gc.strokeRect(0, 0, 24, 24);
-                GridPane.setConstraints(canvas, column, row);
-                displayGrid.getChildren().add(canvas);
-            }
-        }
-
-		GridPane.setConstraints(displayGrid, 0, 1);
-		grid.getChildren().add(displayGrid);
+		GridPane.setConstraints(critterGrid, 0, 1);
+		grid.getChildren().add(critterGrid);
 
 		GridPane.setConstraints(controllerGrid, 0, 0);
 		grid.getChildren().add(controllerGrid);
 
-		GridPane.setConstraints(textPane, 0, 2);
-		grid.getChildren().add(textPane);
+		//GridPane.setConstraints(textPane, 0, 2);
+		//grid.getChildren().add(textPane);
 
         primaryStage.setScene(new Scene(grid));
         primaryStage.show();
@@ -346,21 +385,31 @@ public class Main extends Application{
     }
 
 
+    public static void drawGrid(GridPane critterGrid) {
+    	for (int column = 0; column < Params.world_width; column++) {
+            for (int row = 0 ; row < Params.world_height; row++) {
+                Canvas canvas = new Canvas(24,24);
+				GraphicsContext gc = canvas.getGraphicsContext2D();
+				gc.setStroke(Color.BLACK);
+		        gc.strokeRect(0, 0, 24, 24);
+                GridPane.setConstraints(canvas, column, row);
+                critterGrid.getChildren().add(canvas);
+            }
+        }
+    }
+    
     public void showMake(String critter, int num, GridPane displayGrid) {
     	for(int i = 0; i < num; i++) {
     		try {
         		Critter.makeCritter(critter);
         	}
-        	catch(InvalidCritterException e){
-        		System.out.println(e);
+        	catch(Exception e){
+        		System.out.println("Show makeError");
         	}
 
     	Critter.displayWorld(displayGrid);
     	}
-
-
     }
-
 
     public static void listFilesForFolder(final File folder, HashSet<String> classList) {
         for (final File fileEntry : folder.listFiles()) {
@@ -375,6 +424,36 @@ public class Main extends Application{
             }
         }
     }
+    
+    public static ArrayList<String> getCritterExtends(){
+    	Path currentRelativePath = Paths.get("");
+    	String s = currentRelativePath.toAbsolutePath().toString();
+    	HashSet<String> classList = new HashSet<String>();
+    	ArrayList<String> critterClass = new ArrayList<String>();
+    	File general = new File(s);
+    	listFilesForFolder(general, classList);
+
+    	for(String f : classList) {
+    		try {
+				Class<?> c = Class.forName(myPackage + "." + f.substring(0, f.lastIndexOf(".")));
+				try {
+					Class<?> cC = Class.forName(myPackage + "." + "Critter");
+					if(cC.isAssignableFrom(c)) {
+						critterClass.add(c.getName());
+					}
+
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					System.out.println("bad1");
+				}
+			} catch (Exception | java.lang.NoClassDefFoundError e) {
+				// TODO Auto-generated catch block
+				System.out.println("bad2");
+			}
+    	}
+    	return critterClass;
+    }
+    
     /**
 
      * Controller component
