@@ -68,6 +68,12 @@ public abstract class Critter {
 		myPackage = Critter.class.getPackage().toString().split(" ")[1];
 	}
 
+	
+	/**
+	 * Looks at the spot specified by the parameters
+	 * @param boolean steps
+	 * @param int direction
+	 */
 	protected final String look(int direction, boolean steps) {
 		int[] lookSpot = new int[2];
 		this.energy -= Params.look_energy_cost;
@@ -663,29 +669,6 @@ public abstract class Critter {
 
             GridPane.setConstraints(canvas, c.x_coord, c.y_coord);
             grid.getChildren().add(canvas);
-		}
-	}
-
-	private static int chooseShape(CritterShape shape, double[] x, double[] y){
-		switch(shape){
-			case SQUARE:
-				x = Arrays.copyOf(new double[]{6.0, 6.0, 18.0, 18.0}, 4);
-				y = Arrays.copyOf(new double[]{6.0, 18.0, 18.0, 6.0}, 4);
-				return 4;
-			case TRIANGLE:
-				x = Arrays.copyOf(new double[]{12.0, 18.0, 6.0}, 3);
-				y = Arrays.copyOf(new double[]{6.0, 18.0, 18.0}, 3);
-				return 3;
-			case DIAMOND:
-				x = Arrays.copyOf(new double[]{12.0, 18.0, 12.0, 6.0}, 4);
-				y = Arrays.copyOf(new double[]{6.0, 12.0, 18.0, 12.0}, 4);
-				return 4;
-			case STAR:
-				x = Arrays.copyOf(new double[]{12.0, 8.0, 18.0, 6.0, 18.0}, 5);
-				y = Arrays.copyOf(new double[]{6.0, 18.0, 9.0, 9.0, 16.0}, 5);
-				return 5;
-			default:
-				return 0;
 		}
 	}
 }

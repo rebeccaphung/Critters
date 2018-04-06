@@ -34,6 +34,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.scene.Scene;
@@ -44,13 +45,16 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.CheckBoxTreeItem.TreeModificationEvent;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.CheckBoxTreeCell;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -124,24 +128,32 @@ public class Main extends Application{
     @Override
     public void start(Stage primaryStage) {
 
-		//initializing all the grids for display
+    	
+    	
+    	
+		//initializing all the grids for display and other variables used in various parts of start
+    	GridPane grid = new GridPane();
     	ArrayList<String> critterClass = getCritterExtends();
     	String currentName;
-    	GridPane grid = new GridPane();
         primaryStage.setTitle("Critters");
         GridPane critterGrid = new GridPane();
         drawGrid(critterGrid);
 		GridPane controllerGrid = new GridPane();
 		final IntegerProperty stepsPerFrame = new SimpleIntegerProperty(1);
 		
+		
+		
+		
+		//Initializing text area
         TextArea textArea = new TextArea();
         textArea.setEditable(false);
         textArea.setWrapText(true);
         textArea.setPrefRowCount(30);
-        GridPane.setConstraints(textArea, 5, 2);
-        controllerGrid.getChildren().add(textArea);
 		
-		//stats tree creation and functionality
+        
+        
+        
+		//Initializing tree check boxes for Run Stats
         CheckBoxTreeItem<String> critterStats = new CheckBoxTreeItem<String>("Critter stats");
         critterStats.setExpanded(true);                  
         final TreeView tree = new TreeView(critterStats);  
@@ -155,6 +167,10 @@ public class Main extends Application{
         tree.setRoot(critterStats);
         tree.setShowRoot(true);
 		
+        
+        
+        
+        //Initializing timeline for animation
 		Timeline timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
         KeyFrame oneFrame = new KeyFrame(Duration.seconds(0.05), new EventHandler<ActionEvent>() {
@@ -172,10 +188,11 @@ public class Main extends Application{
         });
         timeline.getKeyFrames().add(oneFrame);
 
+        
+        
+        
 		//quit button creation and functionality
         Button quitBtn = new Button("Quit");
-        GridPane.setConstraints(quitBtn, 0, 4);
-        controllerGrid.getChildren().add(quitBtn);
         quitBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -184,21 +201,17 @@ public class Main extends Application{
         });
 
 
+        
+        
 		//make button creation and functionality
         Button makeBtn = new Button("Make");
         TextField makeField = new TextField();
+        makeField.setPromptText("Enter amount");
         ComboBox makeDD = new ComboBox();
         for(String critters : critterClass) {
         	currentName = (critters.substring(critters.lastIndexOf(".") + 1, critters.length()));
         	makeDD.getItems().add(currentName);
         }
-        GridPane.setConstraints(makeDD, 1, 0);
-        GridPane.setConstraints(makeBtn, 0, 0);
-        GridPane.setConstraints(makeField, 2, 0);
-        makeField.setPromptText("Enter amount");
-        controllerGrid.getChildren().add(makeDD);
-        controllerGrid.getChildren().add(makeBtn);
-        controllerGrid.getChildren().add(makeField);
         makeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -227,13 +240,13 @@ public class Main extends Application{
             }
         });
 
+        
+        
+        
+        //seed button creation and functionality
         Button seedBtn = new Button("Seed");
-        GridPane.setConstraints(seedBtn, 0, 2);
-        controllerGrid.getChildren().add(seedBtn);
         TextField seedField = new TextField ();
-        seedField.setPromptText("Enter seed value.");
-        GridPane.setConstraints(seedField, 1, 2);
-        controllerGrid.getChildren().add(seedField);
+        seedField.setPromptText("Enter seed value");
         seedBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -242,23 +255,20 @@ public class Main extends Application{
 	                Critter.setSeed(seedValue);
                 }
                 catch(Exception c){
-                    seedField.setPromptText("That was not a valid number. Enter seed value.");
+                    seedField.setPromptText("Enter seed value");
                 }
             }
         });
 
 
+        
+        
+        //step, stepField, and step drop down button creation and functionality
         Button stepBtn = new Button("Step");
         TextField stepField = new TextField ();
         stepField.setPromptText("Enter amount");
 		ComboBox stepDD = new ComboBox();
 		stepDD.getItems().addAll("x1", "x2", "x5", "x10", "x100");
-		GridPane.setConstraints(stepBtn, 0, 1);
-		GridPane.setConstraints(stepField, 2, 1);
-		GridPane.setConstraints(stepDD, 1, 1);
-		controllerGrid.getChildren().add(stepBtn);
-		controllerGrid.getChildren().add(stepDD);
-		controllerGrid.getChildren().add(stepField);
         stepBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -298,21 +308,35 @@ public class Main extends Application{
             }
         });
         
-      //step/animation button creation and functionality
+        
+        
+        
+        //animation speed control creation and functionality
         ComboBox speedDD = new ComboBox();
         speedDD.getItems().addAll("x1", "x2", "x5", "x10", "x15", "x20");
-        GridPane.setConstraints(speedDD, 4, 3);
-        controllerGrid.getChildren().add(speedDD);
 
+        
+        
+        
+        //clear button creation and functionality
+        Button clearBtn = new Button("Clear World");
+        clearBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+            	Critter.clearWorld();
+            	drawGrid(critterGrid);
+            }
+        });
+        
+        
+        
+        
 		//stop button creation and functionality
         Button stopAniBtn = new Button("Stop animation");
-        GridPane.setConstraints(stopAniBtn, 4, 1);
-        controllerGrid.getChildren().add(stopAniBtn);
         stopAniBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
             	timeline.stop();
-            	quitBtn.setDisable(false);
 				makeBtn.setDisable(false);
 				makeField.setDisable(false);
 				makeDD.setDisable(false);
@@ -322,12 +346,16 @@ public class Main extends Application{
 				seedBtn.setDisable(false);
 				seedField.setDisable(false);
 				speedDD.setDisable(false);
+				clearBtn.setDisable(false);
+				tree.setDisable(false);
             }
         });
         
+        
+        
+        
+        //stop button creation and functionality
         Button startAniBtn = new Button("Start animation");
-        GridPane.setConstraints(startAniBtn, 4, 2);
-        controllerGrid.getChildren().add(startAniBtn);
         startAniBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -340,7 +368,8 @@ public class Main extends Application{
 				stepDD.setDisable(true);
 				seedBtn.setDisable(true);
 				seedField.setDisable(true);
-				quitBtn.setDisable(true);
+				tree.setDisable(true);
+				clearBtn.setDisable(true);
 				try {
 					stepsPerFrame.setValue(Integer.parseInt(speedDD.getValue().toString().substring(1)));
 				} catch (Exception e1) {
@@ -350,33 +379,103 @@ public class Main extends Application{
             }
         });   
         
-		GridPane.setConstraints(tree, 5, 0);
+        
+        
+        
+        Label makeL = new Label("Critter type: ");
+        Label stepL = new Label("Multiplier: ");
+        Label animateL = new Label("Frame rate: ");
+        
+        
+        //Organizing the grid panes
+        GridPane.setConstraints(controllerGrid, 0, 0);
+		GridPane.setConstraints(tree, 1, 0);
+		//GridPane.setConstraints(critterGrid, 0, 1);
+		GridPane.setConstraints(makeL, 0, 0);
+		GridPane.setConstraints(makeDD, 1, 0);
+		GridPane.setConstraints(makeField, 2, 0);
+		GridPane.setConstraints(makeBtn, 3, 0);
+		GridPane.setConstraints(stepL, 0, 1);
+		GridPane.setConstraints(stepDD, 1, 1);
+		GridPane.setConstraints(stepField, 2, 1);
+		GridPane.setConstraints(stepBtn, 3, 1);
+		GridPane.setConstraints(seedField, 2, 2);
+		GridPane.setConstraints(seedBtn, 3, 2);
+		GridPane.setConstraints(quitBtn, 1, 4);
+		GridPane.setConstraints(animateL, 0, 2);
+		GridPane.setConstraints(speedDD, 1, 2);
+		GridPane.setConstraints(startAniBtn, 0, 3);
+		GridPane.setConstraints(stopAniBtn, 1, 3);
+        GridPane.setConstraints(textArea, 1, 1);
+        GridPane.setConstraints(clearBtn, 0, 4);
+        
+        controllerGrid.setHgap(20);
+        controllerGrid.setVgap(10);
+        controllerGrid.setPadding(new Insets(10, 10, 10, 10));
+        critterGrid.setPadding(new Insets(10, 10, 10, 10));
+		
+        //Adding elements to the grid pane
+        controllerGrid.getChildren().add(quitBtn);
+        controllerGrid.getChildren().add(clearBtn);
+        controllerGrid.getChildren().add(makeDD);
+        controllerGrid.getChildren().add(makeBtn);
+        controllerGrid.getChildren().add(makeField);
+		controllerGrid.getChildren().add(seedField);
+		controllerGrid.getChildren().add(seedBtn);
+		controllerGrid.getChildren().add(stepBtn);
+		controllerGrid.getChildren().add(stepDD);
+		controllerGrid.getChildren().add(stepField);
+		controllerGrid.getChildren().add(speedDD);
+        controllerGrid.getChildren().add(stopAniBtn);
+		controllerGrid.getChildren().add(startAniBtn);
+		controllerGrid.getChildren().add(makeL);
+		controllerGrid.getChildren().add(stepL);
+		controllerGrid.getChildren().add(animateL);
+		grid.getChildren().add(textArea);
 		grid.getChildren().add(tree);
-
-		GridPane.setConstraints(critterGrid, 0, 1);
 		grid.getChildren().add(critterGrid);
-
-		GridPane.setConstraints(controllerGrid, 0, 0);
 		grid.getChildren().add(controllerGrid);
 
-        primaryStage.setScene(new Scene(grid));
+		
+		ScrollPane scrollPane = new ScrollPane(critterGrid);
+	    scrollPane.setFitToHeight(true);
+	    grid.getChildren().add(scrollPane);
+		
+	    GridPane.setConstraints(scrollPane, 0, 1);
+	    
+		Scene scene = new Scene(grid);
+        primaryStage.setScene(scene);
         primaryStage.show();
         System.out.flush();
     }
+    
 
 
+    /**
+	 * Draws the critter world, refreshes the new grid
+	 * @param GridPane critterGrid
+	 */
     public static void drawGrid(GridPane critterGrid) {
     	for (int column = 0; column < Params.world_width; column++) {
             for (int row = 0 ; row < Params.world_height; row++) {
                 Canvas canvas = new Canvas(24,24);
 				GraphicsContext gc = canvas.getGraphicsContext2D();
 				gc.setStroke(Color.BLACK);
+		        gc.setFill(Color.WHITE);
+		        gc.fillRect(0, 0, 24, 24);
 		        gc.strokeRect(0, 0, 24, 24);
                 GridPane.setConstraints(canvas, column, row);
                 critterGrid.getChildren().add(canvas);
             }
         }
     }
+    
+    /**
+	 * Shows the critters that are made when the make button is fired
+	 * @param String critter
+	 * @param int num
+	 * @param GridPane displayGrid
+	 */
 
     public void showMake(String critter, int num, GridPane displayGrid) {
     	for(int i = 0; i < num; i++) {
@@ -390,6 +489,12 @@ public class Main extends Application{
     	Critter.displayWorld(displayGrid);
     	}
     }
+    
+    /**
+	 * Searches and saves all the files with the .class extension in the workspace
+	 * @param final File folder
+	 * @param HashSet<String> classList
+	 */
 
     public static void listFilesForFolder(final File folder, HashSet<String> classList) {
         for (final File fileEntry : folder.listFiles()) {
@@ -404,6 +509,12 @@ public class Main extends Application{
             }
         }
     }
+    
+    /**
+	 * Implements reflection to call appropriate run stats method
+	 * @param TextArea textArea
+	 * @param String input
+	 */
 
     public static void displayingStats(TextArea textArea, String input) {
 	    List<Critter> critters = new ArrayList<Critter>();
@@ -427,6 +538,12 @@ public class Main extends Application{
 	        }
     }
     
+    
+    /**
+	 * Searches through all the files returned by listFiles funcition and finds the classes that extends Critter
+	 * @param ArrayList<String> that contains all the classes that extend Critter
+	 * @see listFilesForFolder()
+	 */
     public static ArrayList<String> getCritterExtends(){
     	Path currentRelativePath = Paths.get("");
     	String s = currentRelativePath.toAbsolutePath().toString();
@@ -455,130 +572,4 @@ public class Main extends Application{
     	}
     	return critterClass;
     }
-
-    /**
-
-     * Controller component
-     * Takes in the input and commences the appropriate functions in regards to the command keywords
-     * "step" goes through one time step
-     * "step <integer>" goes through <integer> time steps
-     * "show" calls displays world and outputs the view component
-     * "make <Critter>" creates one instance of the <critter> type and adds it to the population list
-     * "make <Critter> <integer>" creates <integer> instances of the <critter> type and adds them to the population list
-     * "seed <integer>" invokes Critter.setSeed using <integer> as the new random seed
-     * "stats <Critter>" calls the runStats function of that particular <Critter> class
-     * "quit" ends the program
-     * @param kb
-
-     */
-
-/*
-
-    public static void controller(Scanner kb) {
-    	System.out.print("critters>");
-        String line = kb.nextLine();
-        String[] input = line.split("\\s+");	//groups all white space as delimiters
-        System.out.println();
-
-        while(!input[0].equals("quit")){
-        	if(input.length == 1) {
-
-        		switch(input[0]){
-        			case "show":
-        				Critter.displayWorld();
-        				break;
-        			case "step":
-        				Critter.worldTimeStep();
-        				break;
-        			default:
-                    	System.out.println("error processing: " + line);
-                    	break;
-        		}
-        	}
-        	else if(input.length == 2) {
-
-        		switch(input[0]){
-        			case "step":
-						try {
-							for(int i = 0; i < Integer.parseInt(input[1]); i++){
-							    Critter.worldTimeStep();
-							}
-						} catch (NumberFormatException e) {
-							System.out.println("error processing: " + line);
-						}
-						break;
-        			case "seed":
-    					try {
-    						Critter.setSeed(Integer.parseInt(input[1]));
-    					} catch (NumberFormatException e1) {
-    						System.out.println("error processing: " + line);
-    					}
-    					break;
-        			case "make":
-        				try {
-                    		Critter.makeCritter(input[1]);
-                    	}
-                    	catch(InvalidCritterException e){
-                    		System.out.println(e);
-                    	}
-        				break;
-        			case "stats":
-                    	try {
-    	                    List<Critter> critters = new ArrayList<Critter>();
-    	                    critters = Critter.getInstances(input[1]);
-    	                    java.lang.reflect.Method method;
-    		                    try {
-    			                    Class<?> c = Class.forName(myPackage + "." + input[1]);
-    			                    method = c.getMethod("runStats", List.class);
-    			                    if(critters.isEmpty()) {
-    			                    	method.invoke(c, critters);
-    			                    }else {
-    			                    	method.invoke(critters.get(0), critters);
-    			                    }
-    		                    }catch(Exception e) {
-    		                    	System.out.println("error processing: " + line);
-    		                    }
-                    	}
-                    	catch(InvalidCritterException e) {
-                    		System.out.println(e);
-                    	}
-                        break;
-                    default:
-                    	System.out.println("error processing: " + line);
-                    	break;
-        		}
-        	}
-        	else if(input.length == 3) {
-        		if(input[0].equals("make")) {
-        			try {
-						for(int i = 0; i < Integer.parseInt(input[2]); i++){
-							try {
-								Critter.makeCritter(input[1]);
-							}
-							catch(InvalidCritterException e) {
-								System.out.println(e);
-							}
-						}
-					} catch (NumberFormatException e) {
-						System.out.println("error processing: " + line);
-					}
-                }
-        		else {
-            		System.out.println("error processing: " + line);
-            	}
-        	}
-        	else {
-        		System.out.println("error processing: " + line);
-        	}
-
-            System.out.print("critters>");
-            line = kb.nextLine();
-            input = line.split("\\s+");
-        }
-
-
-    }
-    */
-
-
 }

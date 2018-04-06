@@ -74,8 +74,9 @@ public class Critter2 extends Critter{
 			return true;
 		}
 		for(int runDirection = 0; runDirection < 7; runDirection++) {
-			if(look(runDirection, true) != null) {
+			if(look(runDirection, true) == null) {
 				run(runDirection);
+				runDirection = 6;
 			}
 		}
 
