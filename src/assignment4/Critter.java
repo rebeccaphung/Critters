@@ -386,7 +386,9 @@ public abstract class Critter {
 			stats += prefix + s + ":" + critter_count.get(s);
 			prefix = ", ";
 		}
-
+		
+		stats += "\n";
+		
 		return stats;
 }
 

@@ -25,19 +25,32 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckBoxTreeItem;
+import javafx.scene.control.CheckBoxTreeItem.TreeModificationEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -113,18 +126,51 @@ public class Main extends Application{
 
 		//initializing all the grids for display
     	ArrayList<String> critterClass = getCritterExtends();
+    	String currentName;
     	GridPane grid = new GridPane();
         primaryStage.setTitle("Critters");
         GridPane critterGrid = new GridPane();
         drawGrid(critterGrid);
 		GridPane controllerGrid = new GridPane();
-		final BooleanProperty animationFlag = new SimpleBooleanProperty();
-		animationFlag.set(false);
-		final BooleanProperty stopFlag = new SimpleBooleanProperty();
-		stopFlag.set(false);
-		final BooleanProperty animatingFlag = new SimpleBooleanProperty();
-		animatingFlag.set(false);
+		final IntegerProperty stepsPerFrame = new SimpleIntegerProperty(1);
+		
+        TextArea textArea = new TextArea();
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setPrefRowCount(30);
+        GridPane.setConstraints(textArea, 5, 2);
+        controllerGrid.getChildren().add(textArea);
+		
+		//stats tree creation and functionality
+        CheckBoxTreeItem<String> critterStats = new CheckBoxTreeItem<String>("Critter stats");
+        critterStats.setExpanded(true);                  
+        final TreeView tree = new TreeView(critterStats);  
+        tree.setEditable(true);
+        tree.setCellFactory(CheckBoxTreeCell.<String>forTreeView());    
+        for (String critters : critterClass) {
+        	currentName = (critters.substring(critters.lastIndexOf(".") + 1, critters.length()));
+        	final CheckBoxTreeItem<String> checkBoxTreeItem = new CheckBoxTreeItem<String>(currentName);
+            critterStats.getChildren().add(checkBoxTreeItem);         
+        }                  
+        tree.setRoot(critterStats);
+        tree.setShowRoot(true);
+		
 		Timeline timeline = new Timeline();
+        timeline.setCycleCount(Animation.INDEFINITE);
+        KeyFrame oneFrame = new KeyFrame(Duration.seconds(0.05), new EventHandler<ActionEvent>() {
+        	public void handle(ActionEvent event) {
+        		for(int i = 0; i < stepsPerFrame.getValue(); i++) {
+        			Critter.worldTimeStep();
+        			Critter.displayWorld(critterGrid);
+        			for(TreeItem item: critterStats.getChildren()){
+	                    if(((CheckBoxTreeItem)item).isSelected()){
+	                        displayingStats(textArea, item.getValue().toString());
+	                    }
+	                }
+        		}
+        	}
+        });
+        timeline.getKeyFrames().add(oneFrame);
 
 		//quit button creation and functionality
         Button quitBtn = new Button("Quit");
@@ -133,16 +179,15 @@ public class Main extends Application{
         quitBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-            	stopFlag.set(true);
             	System.exit(0);
             }
         });
+
 
 		//make button creation and functionality
         Button makeBtn = new Button("Make");
         TextField makeField = new TextField();
         ComboBox makeDD = new ComboBox();
-        String currentName;
         for(String critters : critterClass) {
         	currentName = (critters.substring(critters.lastIndexOf(".") + 1, critters.length()));
         	makeDD.getItems().add(currentName);
@@ -180,21 +225,6 @@ public class Main extends Application{
                     System.out.println("Make error");
                 }
             }
-        });
-
-		//step/animation button creation and functionality
-        CheckBox animateChk = new CheckBox("Animation");
-        ComboBox speedDD = new ComboBox();
-        speedDD.getItems().addAll("x1", "x2", "x5", "x10", "x100");
-        GridPane.setConstraints(speedDD, 1, 3);
-        GridPane.setConstraints(animateChk, 0, 3);
-        controllerGrid.getChildren().add(animateChk);
-        controllerGrid.getChildren().add(speedDD);
-        animateChk.setOnAction(new EventHandler<ActionEvent>(){
-        	@Override
-        	public void handle(ActionEvent e) {
-        		animationFlag.set(!animationFlag.getValue());
-        	}
         });
 
         Button seedBtn = new Button("Seed");
@@ -235,7 +265,6 @@ public class Main extends Application{
                 try{
                 	int multiplier = 1;
 					int stepValue = 1;
-					int speed = 1;
 					String mulNum;
 					try {
 						mulNum = stepDD.getValue().toString();
@@ -252,141 +281,83 @@ public class Main extends Application{
 						}
 					}
 					stepValue = stepValue * multiplier;
-
-					if(!animationFlag.getValue()){
-						for(int i = 0; i < stepValue; i++){
-							Critter.worldTimeStep();
-						}
-						Critter.displayWorld(critterGrid);
+					for(int i = 0; i < stepValue; i++){
+						Critter.worldTimeStep();
 					}
-					else {
-						//Timeline timeline = new Timeline();				***************************************************************
-						try {
-							speed = Integer.parseInt(speedDD.getValue().toString().substring(1));
-						} catch (Exception e1) {}
-
-						makeBtn.setDisable(true);
-						makeField.setDisable(true);
-						makeDD.setDisable(true);
-						animateChk.setDisable(true);
-						speedDD.setDisable(true);
-						stepBtn.setDisable(true);
-						stepField.setDisable(true);
-						stepDD.setDisable(true);
-						seedBtn.setDisable(true);
-						seedField.setDisable(true);
-						quitBtn.setDisable(true);
-
-						animatingFlag.set(true);
-						while(animationFlag.getValue() && !stopFlag.get()) {
-							System.out.println(stepValue);
-							if(stepValue == 0) {
-								stopFlag.set(true);
-								stepValue++;
-							}else {
-								Critter.worldTimeStep();
-								/*KeyFrame oneFrame = new KeyFrame(Duration.millis(1000/speed), new EventHandler<ActionEvent>() {
-									@Override
-									public void handle(ActionEvent event) {
-										Critter.worldTimeStep();
-										Critter.displayWorld(critterGrid);
-									}
-								});
-								timeline.getKeyFrames().add(oneFrame);*/
-							}
-							stepValue--;
-							Critter.displayWorld(critterGrid);
-							TimeUnit.MILLISECONDS.sleep(1000/speed);
-						}
-						//timeline.play();
-						stopFlag.set(false);
-						animatingFlag.set(false);
-
-						quitBtn.setDisable(false);
-						makeBtn.setDisable(false);
-						makeField.setDisable(false);
-						makeDD.setDisable(false);
-						animateChk.setDisable(false);
-						speedDD.setDisable(false);
-						stepBtn.setDisable(false);
-						stepField.setDisable(false);
-						stepDD.setDisable(false);
-						seedBtn.setDisable(false);
-						seedField.setDisable(false);
-					}
+					Critter.displayWorld(critterGrid);
+					
+					for(TreeItem item: critterStats.getChildren()){
+	                    if(((CheckBoxTreeItem)item).isSelected()){
+	                        displayingStats(textArea, item.getValue().toString());
+	                    }
+	                }
                 }
                 catch(Exception c){
                     c.printStackTrace();
                 }
             }
         });
+        
+      //step/animation button creation and functionality
+        ComboBox speedDD = new ComboBox();
+        speedDD.getItems().addAll("x1", "x2", "x5", "x10", "x15", "x20");
+        GridPane.setConstraints(speedDD, 4, 3);
+        controllerGrid.getChildren().add(speedDD);
 
 		//stop button creation and functionality
-        Button stopBtn = new Button("Stop");
-        GridPane.setConstraints(stopBtn, 4, 1);
-        controllerGrid.getChildren().add(stopBtn);
-        stopBtn.setOnAction(new EventHandler<ActionEvent>() {
+        Button stopAniBtn = new Button("Stop animation");
+        GridPane.setConstraints(stopAniBtn, 4, 1);
+        controllerGrid.getChildren().add(stopAniBtn);
+        stopAniBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-				if(animatingFlag.get()){
-					stopFlag.set(true);
-				}
+            	timeline.stop();
+            	quitBtn.setDisable(false);
+				makeBtn.setDisable(false);
+				makeField.setDisable(false);
+				makeDD.setDisable(false);
+				stepBtn.setDisable(false);
+				stepField.setDisable(false);
+				stepDD.setDisable(false);
+				seedBtn.setDisable(false);
+				seedField.setDisable(false);
+				speedDD.setDisable(false);
             }
         });
-
-
-		//stats button creation and functionality
-/*		ComboBox statsDD = new ComboBox();
-		for(String critters : critterClass) {
-        	String currentName = (critters.substring(critters.lastIndexOf(".") + 1, critters.length()));
-        	CheckBox newCheckbox = new CheckBox(currentName);
-	        statsDD.getItems().add(newCheckbox);
-        }
-
-        Button statsBtn = new Button("Run Stats");
-        GridPane.setConstraints(statsBtn, 0, 3);
-        controllerGrid.getChildren().add(statsBtn);
-		GridPane.setConstraints(statsDD, 1, 3);
-        controllerGrid.getChildren().add(statsDD);
-		statsBtn.setOnAction(new EventHandler<ActionEvent>() {
+        
+        Button startAniBtn = new Button("Start animation");
+        GridPane.setConstraints(startAniBtn, 4, 2);
+        controllerGrid.getChildren().add(startAniBtn);
+        startAniBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                //add runStats functionality
-				if(!animationFlag){
-					String runStatsString = "";
-
-					for(CheckBox c : statsDD.getItems()){
-						if(c.isSelected()){
-							List<Critter> critters = new ArrayList<Critter>();
-    	                    critters = Critter.getInstances(c.getText());
-    	                    java.lang.reflect.Method method;
-    		                    try {
-    			                    Class<?> c = Class.forName(myPackage + "." + c.getText());
-    			                    method = c.getMethod("runStats", List.class);
-    			                    if(critters.isEmpty()) {
-    			                    	runStatsString += method.invoke(c, critters) + "\n";
-    			                    }else {
-    			                    	runStatsString += method.invoke(critters.get(0), critters) + "\n";
-    			                    }
-    		                    }catch(Exception e) {
-    		                    	System.out.println("error processing: ");
-    		                    }
-						}
-					}
-
-					textPane.replaceSelection(runStatsString);
+            	makeBtn.setDisable(true);
+				makeField.setDisable(true);
+				makeDD.setDisable(true);
+				speedDD.setDisable(true);
+				stepBtn.setDisable(true);
+				stepField.setDisable(true);
+				stepDD.setDisable(true);
+				seedBtn.setDisable(true);
+				seedField.setDisable(true);
+				quitBtn.setDisable(true);
+				try {
+					stepsPerFrame.setValue(Integer.parseInt(speedDD.getValue().toString().substring(1)));
+				} catch (Exception e1) {
+					stepsPerFrame.setValue(1);
 				}
+				timeline.play();
             }
-        });*/
+        });   
+        
+		GridPane.setConstraints(tree, 5, 0);
+		grid.getChildren().add(tree);
 
 		GridPane.setConstraints(critterGrid, 0, 1);
 		grid.getChildren().add(critterGrid);
 
 		GridPane.setConstraints(controllerGrid, 0, 0);
 		grid.getChildren().add(controllerGrid);
-
-		//GridPane.setConstraints(textPane, 0, 2);
-		//grid.getChildren().add(textPane);
 
         primaryStage.setScene(new Scene(grid));
         primaryStage.show();
@@ -434,6 +405,28 @@ public class Main extends Application{
         }
     }
 
+    public static void displayingStats(TextArea textArea, String input) {
+	    List<Critter> critters = new ArrayList<Critter>();
+	    try {
+			critters = Critter.getInstances(input);
+		} catch (InvalidCritterException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	    java.lang.reflect.Method method;
+	        try {
+	            Class<?> c = Class.forName(myPackage + "." + input);
+	            method = c.getMethod("runStats", List.class);
+	            if(critters.isEmpty()) {
+	            	textArea.appendText((String) method.invoke(c, critters));
+	            }else {
+	            	textArea.appendText((String) method.invoke(critters.get(0), critters));
+	            }
+	        }catch(Exception e) {
+	        	System.out.println("error displayingStats");
+	        }
+    }
+    
     public static ArrayList<String> getCritterExtends(){
     	Path currentRelativePath = Paths.get("");
     	String s = currentRelativePath.toAbsolutePath().toString();
