@@ -440,6 +440,7 @@ public class Main extends Application{
 		ScrollPane scrollPane = new ScrollPane(critterGrid);
 	    scrollPane.setFitToHeight(true);
 	    grid.getChildren().add(scrollPane);
+	    scrollPane.setPrefSize(400, 400);
 		
 	    GridPane.setConstraints(scrollPane, 0, 1);
 	    
